@@ -4,1572 +4,688 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Burak Coşkun — iOS & Mobile Platform Engineer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    
     :root {
-      --bg:        #080d18;
-      --surface:   #0f1623;
-      --surface2:  #161f30;
-      --surface3:  #1c2740;
-      --border:    #1e2d45;
-      --border2:   #243350;
-      --border3:   #2d3f5c;
-      --text:      #e2e8f0;
-      --text2:     #94a3b8;
-      --text3:     #64748b;
-      --text4:     #475569;
-      --blue:      #3b82f6;
-      --blue2:     #60a5fa;
-      --blue-bg:   rgba(59,130,246,.10);
-      --blue-bg2:  rgba(59,130,246,.05);
-      --green:     #10b981;
-      --green2:    #34d399;
-      --green-bg:  rgba(16,185,129,.10);
-      --amber:     #f59e0b;
-      --amber2:    #fbbf24;
-      --amber-bg:  rgba(245,158,11,.10);
-      --purple:    #8b5cf6;
-      --purple2:   #a78bfa;
-      --purple-bg: rgba(139,92,246,.10);
-      --pink:      #ec4899;
-      --pink2:     #f472b6;
-      --pink-bg:   rgba(236,72,153,.10);
-      --cyan:      #06b6d4;
-      --cyan2:     #22d3ee;
-      --cyan-bg:   rgba(6,182,212,.10);
-      --red:       #ef4444;
-      --red-bg:    rgba(239,68,68,.10);
-      --orange:    #f97316;
-      --orange-bg: rgba(249,115,22,.10);
+      --bg-dark: #050505;
+      --bg-gradient: radial-gradient(circle at top, #111827 0%, #000000 100%);
+      --surface: rgba(20, 20, 20, 0.6);
+      --surface-hover: rgba(30, 30, 30, 0.8);
+      --surface-bright: rgba(255, 255, 255, 0.05);
+      --border: rgba(255, 255, 255, 0.1);
+      --border-hover: rgba(255, 255, 255, 0.2);
+      
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      
+      --blue: #3b82f6; --blue-glow: rgba(59, 130, 246, 0.5);
+      --green: #10b981; --green-glow: rgba(16, 185, 129, 0.5);
+      --amber: #f59e0b; --amber-glow: rgba(245, 158, 11, 0.5);
+      --purple: #8b5cf6; --purple-glow: rgba(139, 92, 246, 0.5);
+      --pink: #ec4899; --pink-glow: rgba(236, 72, 153, 0.5);
+      --cyan: #06b6d4; --cyan-glow: rgba(6, 182, 212, 0.5);
     }
-    html { scroll-behavior: smooth; }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.65;
-      font-size: 14.5px;
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      background: var(--bg-dark);
+      background-image: var(--bg-gradient);
+      background-attachment: fixed;
+      color: var(--text-main);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
     }
-    a { color: var(--blue2); text-decoration: none; }
-    a:hover { text-decoration: underline; }
+
+    /* Animated Background Mesh */
+    .bg-mesh {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: -1; opacity: 0.4; pointer-events: none;
+      background: 
+        radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.15), transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15), transparent 25%);
+      filter: blur(40px);
+      animation: meshFloat 20s infinite alternate linear;
+    }
+    @keyframes meshFloat {
+      0% { transform: scale(1) translateY(0); }
+      100% { transform: scale(1.1) translateY(-20px); }
+    }
+
+    a { color: var(--blue); text-decoration: none; transition: color 0.2s; }
+    a:hover { color: #60a5fa; }
+    
     code {
-      font-family: 'SF Mono','Fira Code','Fira Mono','Roboto Mono',Consolas,monospace;
-      font-size: .82em;
-      background: var(--surface3);
-      color: var(--cyan2);
-      padding: 1px 5px;
-      border-radius: 3px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85em;
+      background: rgba(0,0,0,0.4);
+      color: var(--cyan);
+      padding: 0.2em 0.4em;
+      border-radius: 4px;
       border: 1px solid var(--border);
     }
 
-    /* ── Layout ─── */
-    .container { max-width: 980px; margin: 0 auto; padding: 0 24px; }
-
+    .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+    
     /* ── Typography ─── */
-    h1 { font-size: 2.6rem; font-weight: 800; letter-spacing: -.04em; line-height: 1.1; }
-    h2 { font-size: 1.5rem; font-weight: 700; letter-spacing: -.02em; }
-    h3 { font-size: 1.05rem; font-weight: 600; }
-    h4 { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; color: var(--text3); }
-    h5 { font-size: .88rem; font-weight: 600; color: var(--text2); }
-
+    h1 { font-size: 3.5rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 16px; }
+    h2 { font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
+    h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 8px; }
+    
+    /* Text Gradients */
+    .text-gradient {
+      background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
     /* ── Hero ─── */
-    .hero { padding: 72px 0 52px; border-bottom: 1px solid var(--border); }
+    .hero { padding: 100px 0 80px; position: relative; border-bottom: 1px solid var(--border); }
     .hero-eyebrow {
-      font-size: .78rem; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .12em; color: var(--blue); margin-bottom: 14px;
-      display: flex; align-items: center; gap: 8px;
+      display: inline-block;
+      font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em;
+      color: var(--cyan); margin-bottom: 20px;
+      padding: 6px 12px; background: rgba(6, 182, 212, 0.1);
+      border: 1px solid rgba(6, 182, 212, 0.2); border-radius: 100px;
     }
-    .hero-eyebrow::before { content:''; width:24px; height:2px; background:var(--blue); border-radius:2px; }
-    .hero-name { color: var(--text); }
-    .hero-name em { color: var(--blue2); font-style: normal; }
-    .hero-role { font-size: 1.05rem; color: var(--text2); margin-top: 10px; font-weight: 400; }
-    .hero-bio { font-size: .95rem; color: var(--text2); max-width: 660px; line-height: 1.75; margin-top: 18px; }
-    .hero-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+    .hero-role { font-size: 1.25rem; color: var(--text-muted); font-weight: 500; margin-bottom: 24px; }
+    .hero-bio { font-size: 1.1rem; color: var(--text-muted); max-width: 760px; line-height: 1.8; margin-bottom: 32px; }
+    
+    .hero-links { display: flex; flex-wrap: wrap; gap: 12px; }
     .link-pill {
-      display: inline-flex; align-items: center; gap: 7px;
-      padding: 8px 16px; border-radius: 8px;
-      border: 1px solid var(--border2);
-      font-size: .83rem; font-weight: 500; color: var(--text2);
-      background: var(--surface);
-      transition: all .18s;
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 20px; border-radius: 12px;
+      font-size: 0.9rem; font-weight: 600; color: var(--text-main);
+      background: var(--surface); border: 1px solid var(--border);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .link-pill:hover { border-color: var(--blue); color: var(--blue2); text-decoration: none; background: var(--blue-bg2); }
-    .link-pill svg { width: 15px; height: 15px; fill: currentColor; flex-shrink: 0; }
-    .pill-live { border-color: rgba(16,185,129,.4); color: var(--green); background: var(--green-bg); }
+    .link-pill:hover {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.3);
+      box-shadow: 0 10px 20px -10px rgba(0,0,0,0.5);
+    }
+    .link-pill svg { width: 18px; height: 18px; fill: currentColor; }
+    
+    .location-pill {
+      background: transparent; border-color: transparent; color: var(--text-dim);
+    }
+    .location-pill:hover { transform: none; background: transparent; border-color: transparent; box-shadow: none; color: var(--text-muted); }
 
     /* ── Badges ─── */
     .badge {
-      display: inline-block; padding: 2px 9px; border-radius: 4px;
-      font-size: .73rem; font-weight: 600; border: 1px solid transparent;
+      display: inline-flex; padding: 4px 10px; border-radius: 6px;
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em;
+      border: 1px solid; backdrop-filter: blur(4px);
     }
-    .b-blue   { background:var(--blue-bg);   color:var(--blue2);   border-color:rgba(59,130,246,.3); }
-    .b-green  { background:var(--green-bg);  color:var(--green2);  border-color:rgba(16,185,129,.3); }
-    .b-amber  { background:var(--amber-bg);  color:var(--amber2);  border-color:rgba(245,158,11,.3); }
-    .b-purple { background:var(--purple-bg); color:var(--purple2); border-color:rgba(139,92,246,.3); }
-    .b-pink   { background:var(--pink-bg);   color:var(--pink2);   border-color:rgba(236,72,153,.3); }
-    .b-cyan   { background:var(--cyan-bg);   color:var(--cyan2);   border-color:rgba(6,182,212,.3); }
-    .b-red    { background:var(--red-bg);    color:var(--red);     border-color:rgba(239,68,68,.3); }
-    .b-orange { background:var(--orange-bg); color:var(--orange);  border-color:rgba(249,115,22,.3); }
-    .b-gray   { background:rgba(100,116,139,.1); color:var(--text2); border-color:rgba(100,116,139,.25); }
+    .b-blue   { background: rgba(59,130,246,0.1);  color: #93c5fd; border-color: rgba(59,130,246,0.3); }
+    .b-green  { background: rgba(16,185,129,0.1);  color: #6ee7b7; border-color: rgba(16,185,129,0.3); }
+    .b-amber  { background: rgba(245,158,11,0.1);  color: #fcd34d; border-color: rgba(245,158,11,0.3); }
+    .b-purple { background: rgba(139,92,246,0.1);  color: #c4b5fd; border-color: rgba(139,92,246,0.3); }
+    .b-pink   { background: rgba(236,72,153,0.1);  color: #f9a8d4; border-color: rgba(236,72,153,0.3); }
+    .b-cyan   { background: rgba(6,182,212,0.1);   color: #67e8f9; border-color: rgba(6,182,212,0.3); }
+    .b-gray   { background: rgba(148,163,184,0.1); color: #cbd5e1; border-color: rgba(148,163,184,0.3); }
 
     /* ── Stack section ─── */
-    .stack-section { padding: 28px 0 24px; border-bottom: 1px solid var(--border); }
-    .stack-groups { display: flex; flex-direction: column; gap: 11px; }
-    .stack-row { display: flex; align-items: flex-start; gap: 10px; flex-wrap: wrap; }
-    .stack-label { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--text4); min-width: 86px; flex-shrink: 0; padding-top: 3px; }
-    .badges { display: flex; flex-wrap: wrap; gap: 5px; }
+    .stack-section { padding: 40px 0; border-bottom: 1px solid var(--border); }
+    .stack-groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+    .stack-col h4 { font-size: 0.85rem; color: var(--text-dim); margin-bottom: 12px; letter-spacing: 0.1em; }
+    .badges { display: flex; flex-wrap: wrap; gap: 8px; }
 
-    /* ── Section headers ─── */
-    .section-header { padding: 48px 0 26px; }
-    .section-header h2 { font-size: 1.6rem; }
-    .section-header p { color: var(--text2); font-size: .93rem; margin-top: 8px; max-width: 600px; }
-    hr.divider { border: none; border-top: 1px solid var(--border); }
+    /* ── Section Headers ─── */
+    .section-header { padding: 80px 0 40px; text-align: center; }
+    .section-header p { color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
 
     /* ════════════════════════════════════════════════
-       PROJECT CARD
+       PREMIUM PROJECT CARDS
     ════════════════════════════════════════════════ */
-    .projects { display: flex; flex-direction: column; gap: 40px; padding-bottom: 56px; }
+    .projects { display: flex; flex-direction: column; gap: 60px; padding-bottom: 80px; }
 
     .project-card {
-      border: 1px solid var(--border);
-      border-radius: 16px;
       background: var(--surface);
-      overflow: hidden;
-    }
-
-    /* Colored left accent bar per project */
-    .accent-blue   { border-left: 3px solid var(--blue); }
-    .accent-green  { border-left: 3px solid var(--green); }
-    .accent-purple { border-left: 3px solid var(--purple); }
-    .accent-amber  { border-left: 3px solid var(--amber); }
-    .accent-cyan   { border-left: 3px solid var(--cyan); }
-    .accent-pink   { border-left: 3px solid var(--pink); }
-
-    /* Header */
-    .pc-header {
-      padding: 26px 28px 0;
-      display: flex; justify-content: space-between; align-items: flex-start;
-      gap: 16px; flex-wrap: wrap;
-    }
-    .pc-meta { display: flex; flex-direction: column; gap: 9px; flex: 1; }
-    .pc-title-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .pc-title-row h2 { font-size: 1.4rem; }
-
-    .proj-tag {
-      display: inline-flex; align-items: center; gap: 5px;
-      padding: 3px 10px; border-radius: 20px;
-      font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
-      border: 1px solid transparent;
-    }
-    .pt-thesis  { background:rgba(245,158,11,.15); color:var(--amber2); border-color:rgba(245,158,11,.35); }
-    .pt-prod    { background:rgba(16,185,129,.15); color:var(--green2); border-color:rgba(16,185,129,.35); }
-    .pt-ios     { background:rgba(59,130,246,.15); color:var(--blue2);  border-color:rgba(59,130,246,.35); }
-    .pt-game    { background:rgba(139,92,246,.15); color:var(--purple2);border-color:rgba(139,92,246,.35); }
-    .pt-android { background:rgba(6,182,212,.15);  color:var(--cyan2);  border-color:rgba(6,182,212,.35); }
-    .pt-ai      { background:rgba(236,72,153,.15); color:var(--pink2);  border-color:rgba(236,72,153,.35); }
-    .pt-flutter { background:rgba(16,185,129,.15); color:var(--green2); border-color:rgba(16,185,129,.35); }
-
-    .loc-tag { font-size: .72rem; font-weight: 600; color: var(--text3); padding: 2px 8px; background:var(--surface3); border:1px solid var(--border); border-radius:4px; }
-
-    .pc-tagline { font-size: .95rem; color: var(--text2); max-width: 720px; line-height: 1.7; }
-    .pc-badges { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
-
-    .gh-btn {
-      display: inline-flex; align-items: center; gap: 7px;
-      padding: 9px 16px; border-radius: 8px;
-      border: 1px solid var(--border2);
-      font-size: .82rem; font-weight: 500; color: var(--text2);
-      background: var(--surface2); white-space: nowrap;
-      transition: all .18s; flex-shrink: 0;
-    }
-    .gh-btn:hover { border-color: var(--blue); color: var(--blue2); text-decoration:none; background:var(--blue-bg2); }
-    .gh-btn svg { width:14px; height:14px; fill:currentColor; }
-    .gh-btns { display:flex; flex-direction:column; gap:8px; }
-
-    /* Body */
-    .pc-body { padding: 22px 28px 30px; display: flex; flex-direction: column; gap: 22px; }
-
-    /* Tabs */
-    .tabs { display: flex; gap: 2px; border-bottom: 1px solid var(--border); margin-bottom: -1px; }
-    .tab-btn {
-      padding: 8px 16px; font-size: .82rem; font-weight: 600;
-      color: var(--text3); border: none; background: transparent;
-      border-bottom: 2px solid transparent; cursor: pointer;
-      transition: color .15s, border-color .15s;
-    }
-    .tab-btn.active { color: var(--blue2); border-bottom-color: var(--blue); }
-    .tab-btn:hover { color: var(--text2); }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-
-    /* Code / diagram block */
-    .code-block {
-      background: var(--surface2);
       border: 1px solid var(--border);
-      border-radius: 10px;
+      border-radius: 24px;
+      padding: 40px;
+      position: relative;
       overflow: hidden;
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .code-block-header {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 10px 16px; border-bottom: 1px solid var(--border);
-      background: var(--surface3);
+    
+    /* Hover Glow Effects */
+    .project-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255,255,255,0.2);
+      box-shadow: 0 20px 40px -10px rgba(0,0,0,0.7);
     }
-    .code-block-header h4 { margin-bottom: 0; }
-    .code-block-body {
-      padding: 14px 18px;
-      font-family: 'SF Mono','Fira Code','Fira Mono','Roboto Mono',Consolas,monospace;
-      font-size: .77rem; line-height: 1.75;
-      color: var(--text2); white-space: pre; overflow-x: auto;
+    .project-card::before {
+      content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
+      opacity: 0.8; transition: opacity 0.3s;
     }
-    .cd-comment { color: var(--text3); }
-    .cd-key     { color: var(--cyan2); }
-    .cd-val     { color: var(--green2); }
-    .cd-arrow   { color: var(--blue2); }
-    .cd-label   { color: var(--amber2); }
-    .cd-accent  { color: var(--pink2); }
-    .cd-note    { color: var(--purple2); }
+    .project-card:hover::before { opacity: 1; box-shadow: 0 0 20px var(--accent-glow); }
+    
+    .project-card.c-amber { --accent: var(--amber); --accent-glow: var(--amber-glow); }
+    .project-card.c-blue  { --accent: var(--blue);  --accent-glow: var(--blue-glow); }
+    .project-card.c-pink  { --accent: var(--pink);  --accent-glow: var(--pink-glow); }
+    .project-card.c-purple{ --accent: var(--purple);--accent-glow: var(--purple-glow); }
+    .project-card.c-cyan  { --accent: var(--cyan);  --accent-glow: var(--cyan-glow); }
+    .project-card.c-green { --accent: var(--green); --accent-glow: var(--green-glow); }
+    
+    .project-card.c-amber::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+    .project-card.c-blue::before  { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+    .project-card.c-pink::before  { background: linear-gradient(90deg, #ec4899, #f472b6); }
+    .project-card.c-purple::before{ background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+    .project-card.c-cyan::before  { background: linear-gradient(90deg, #06b6d4, #22d3ee); }
+    .project-card.c-green::before { background: linear-gradient(90deg, #10b981, #34d399); }
 
-    /* Detail grids */
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
-    @media (max-width: 680px) {
-      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .pc-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px; margin-bottom: 24px; }
+    .pc-title-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+    .pc-title-row h2 { margin: 0; font-size: 2.2rem; }
+    
+    .proj-type {
+      font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
+      padding: 4px 10px; border-radius: 100px;
+      color: var(--accent); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
     }
-
-    .info-block {
-      background: var(--surface2);
+    
+    .pc-tagline { font-size: 1.1rem; color: var(--text-muted); max-width: 800px; line-height: 1.7; margin-bottom: 20px; }
+    
+    /* Code / Architecture Blocks */
+    .arch-block {
+      background: rgba(0,0,0,0.4);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 16px 18px;
-      display: flex; flex-direction: column; gap: 10px;
+      border-radius: 12px;
+      padding: 24px;
+      margin: 30px 0;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      line-height: 1.7;
+      overflow-x: auto;
+      color: #cbd5e1;
+      box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
     }
-    .info-block h4 { margin-bottom: 2px; }
-    .info-block ul { list-style: none; display: flex; flex-direction: column; gap: 5px; }
-    .info-block li {
-      font-size: .84rem; color: var(--text2);
-      padding-left: 16px; position: relative; line-height: 1.55;
-    }
-    .info-block li::before {
-      content: '▸';
-      position: absolute; left: 0;
-      color: var(--blue); font-size: .72rem; top: 2px;
-    }
-    .info-block li.green::before { color: var(--green); }
-    .info-block li.amber::before { color: var(--amber); }
-    .info-block li.pink::before  { color: var(--pink);  }
-    .info-block li.purple::before { color: var(--purple); }
-    .info-block li strong { color: var(--text); }
+    .ab-title { font-size: 0.8rem; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; display: block; border-bottom: 1px solid var(--border); padding-bottom: 8px;}
+    .cd-comment { color: #64748b; font-style: italic; }
+    .cd-keyword { color: #c4b5fd; font-weight: bold; }
+    .cd-string { color: #6ee7b7; }
+    .cd-entity { color: #93c5fd; }
+    .cd-arrow { color: var(--accent); font-weight: bold; }
 
-    /* KV table */
-    .kv-table { width:100%; border-collapse: collapse; font-size: .84rem; }
-    .kv-table td { padding: 7px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
-    .kv-table tr:last-child td { border-bottom: none; }
-    .kv-table td:first-child { color: var(--text3); font-weight: 600; width: 40%; white-space: nowrap; }
-    .kv-table td:last-child { color: var(--text2); }
-
-    /* Decision rows */
-    .decisions { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
-    .decision {
-      padding: 12px 18px; border-bottom: 1px solid var(--border);
-      display: flex; flex-direction: column; gap: 3px;
-      background: var(--surface2);
+    /* Feature Grids */
+    .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 30px; }
+    @media (max-width: 768px) { .feature-grid { grid-template-columns: 1fr; } }
+    
+    .feature-box {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
     }
-    .decision:last-child { border-bottom: none; }
-    .decision-title { font-size: .86rem; font-weight: 600; color: var(--text); }
-    .decision-body  { font-size: .83rem; color: var(--text2); line-height: 1.55; }
-    .decision-verdict { font-size: .76rem; font-weight: 600; color: var(--green); margin-top: 2px; }
-
-    /* Artifact pills */
-    .artifacts { display: flex; flex-wrap: wrap; gap: 6px; }
-    .artifact {
-      font-family: 'SF Mono','Fira Code',Consolas,monospace;
-      font-size: .73rem; padding: 3px 10px;
-      background: var(--surface3);
-      border: 1px solid var(--border2);
-      border-radius: 4px; color: var(--cyan2);
+    .feature-box h4 { display: flex; align-items: center; gap: 8px; font-size: 1rem; color: var(--text-main); text-transform: none; letter-spacing: 0; margin-bottom: 16px; }
+    .feature-box h4 svg { width: 18px; height: 18px; fill: var(--accent); }
+    .feature-box ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .feature-box li { color: var(--text-muted); font-size: 0.95rem; position: relative; padding-left: 20px; }
+    .feature-box li::before {
+      content: '→'; position: absolute; left: 0; color: var(--accent); font-weight: bold;
     }
 
-    /* Metrics row */
-    .metrics { display: flex; flex-wrap: wrap; gap: 10px; }
-    .metric-card {
-      background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 8px; padding: 10px 14px;
-      display: flex; flex-direction: column; gap: 2px; min-width: 140px;
+    /* Interview Focus */
+    .interview-box {
+      background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+      border: 1px solid rgba(255,255,255,0.15);
+      border-left: 4px solid var(--accent);
+      border-radius: 12px;
+      padding: 24px;
     }
-    .metric-name  { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text3); }
-    .metric-value { font-size: 1rem; font-weight: 700; color: var(--text); }
-    .metric-desc  { font-size: .75rem; color: var(--text3); }
-
-    /* Interview tips */
-    .interview-tips {
-      background: linear-gradient(135deg, rgba(59,130,246,.06), rgba(139,92,246,.06));
-      border: 1px solid rgba(59,130,246,.2);
-      border-radius: 10px; padding: 16px 18px;
-    }
-    .interview-tips h4 { color: var(--blue2); margin-bottom: 10px; }
-    .interview-tips ul { list-style: none; display: flex; flex-direction: column; gap: 7px; }
-    .interview-tips li {
-      font-size: .84rem; color: var(--text2);
-      padding-left: 20px; position: relative; line-height: 1.55;
-    }
-    .interview-tips li::before { content:'💡'; position:absolute; left:0; font-size:.75rem; top:1px; }
-
-    /* ── Supporting grid ─── */
-    .support-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 14px; padding-bottom: 52px; }
-    .support-card {
-      border: 1px solid var(--border); border-radius: 10px;
-      padding: 18px 20px; background: var(--surface);
-      display: flex; flex-direction: column; gap: 8px;
-    }
-    .support-card h3 { font-size: .97rem; }
-    .support-card p  { font-size: .83rem; color: var(--text2); line-height: 1.55; }
-    .support-link    { font-size: .8rem; color: var(--blue2); margin-top: auto; }
+    .interview-box h4 { color: var(--text-main); font-size: 1.1rem; margin-bottom: 16px; text-transform: none; letter-spacing: 0;}
+    .interview-box ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .interview-box li { color: #e2e8f0; font-size: 0.95rem; display: flex; gap: 12px; align-items: flex-start; }
+    .interview-box li::before { content: '💡'; font-size: 1.1rem; flex-shrink: 0; }
 
     /* ── Matrix ─── */
-    .matrix-table { width: 100%; border-collapse: collapse; font-size: .84rem; margin-bottom: 52px; }
+    .matrix-table {
+      width: 100%; border-collapse: separate; border-spacing: 0;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
     .matrix-table th {
-      text-align: left; padding: 10px 14px;
-      background: var(--surface2); border: 1px solid var(--border);
-      color: var(--text3); font-weight: 700; font-size: .72rem;
-      text-transform: uppercase; letter-spacing: .08em;
+      background: rgba(0,0,0,0.5); color: var(--text-main); font-weight: 600; text-align: left;
+      padding: 16px 24px; border-bottom: 1px solid var(--border);
     }
     .matrix-table td {
-      padding: 10px 14px; border: 1px solid var(--border);
-      color: var(--text2); vertical-align: top; line-height: 1.6;
-      background: var(--surface);
+      padding: 16px 24px; border-bottom: 1px solid var(--border); color: var(--text-muted);
+      transition: background 0.2s;
     }
-    .matrix-table tr:nth-child(even) td { background: var(--surface2); }
+    .matrix-table tr:last-child td { border-bottom: none; }
+    .matrix-table tr:hover td { background: rgba(255,255,255,0.03); color: var(--text-main); }
+    .matrix-table strong { color: var(--text-main); font-weight: 600; }
+
+    /* ── Support Grid ─── */
+    .support-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
+    .support-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+      padding: 24px; transition: all 0.3s;
+    }
+    .support-card:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.2); }
+    .support-card h3 { font-size: 1.1rem; margin-bottom: 8px; color: var(--text-main); }
+    .support-card p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 16px; }
 
     /* ── Principles ─── */
-    .principles { display: grid; grid-template-columns: repeat(auto-fill, minmax(285px, 1fr)); gap: 14px; padding-bottom: 64px; }
-    .principle { border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; background: var(--surface); }
-    .p-num  { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--blue2); margin-bottom: 6px; }
-    .principle h3 { font-size: .93rem; margin-bottom: 5px; }
-    .principle p  { font-size: .83rem; color: var(--text2); line-height: 1.55; }
-
-    /* ── Footer ─── */
-    .footer {
-      border-top: 1px solid var(--border); padding: 28px 0;
-      display: flex; justify-content: space-between; align-items: center;
-      flex-wrap: wrap; gap: 12px;
+    .principles { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+    .principle {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+      padding: 30px; position: relative; overflow: hidden;
     }
-    .footer p { font-size: .82rem; color: var(--text3); }
+    .p-num { font-family: 'Fira Code', monospace; font-size: 1.5rem; font-weight: 700; color: rgba(255,255,255,0.05); position: absolute; top: 10px; right: 20px; }
+    .principle h3 { font-size: 1.2rem; margin-bottom: 12px; color: var(--text-main); }
+    .principle p { font-size: 0.95rem; color: var(--text-muted); }
 
-    /* ── Print ─── */
+    /* ── Utilities ─── */
+    .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
     @media print {
-      body { background:#fff; color:#111; font-size:11.5px; }
-      :root {
-        --bg:#fff; --surface:#f8fafc; --surface2:#f1f5f9; --surface3:#e2e8f0;
-        --border:#e2e8f0; --border2:#cbd5e1; --border3:#b0bec5;
-        --text:#0f172a; --text2:#475569; --text3:#94a3b8; --text4:#b0bec5;
-        --blue:#2563eb; --blue2:#3b82f6; --blue-bg:#eff6ff; --blue-bg2:#f0f7ff;
-        --green:#059669; --green2:#10b981; --green-bg:#ecfdf5;
-        --amber:#d97706; --amber2:#f59e0b; --amber-bg:#fffbeb;
-        --purple:#7c3aed; --purple2:#8b5cf6; --purple-bg:#f5f3ff;
-        --pink:#db2777; --pink2:#ec4899; --pink-bg:#fdf2f8;
-        --cyan:#0891b2; --cyan2:#06b6d4; --cyan-bg:#ecfeff;
-        --red:#dc2626; --red-bg:#fef2f2;
-        --orange:#ea580c; --orange-bg:#fff7ed;
+      .bg-mesh { display: none; }
+      body { background: white !important; color: black !important; }
+      .project-card, .matrix-table, .support-card, .principle { 
+        background: white !important; border: 1px solid #ccc !important; color: black !important; box-shadow: none !important;
+        break-inside: avoid;
       }
-      .project-card { break-inside: avoid; page-break-inside: avoid; border-left-width: 4px !important; }
-      .hero { padding: 32px 0 24px; }
-      .section-header { padding: 28px 0 18px; }
-      .tab-btn { display: none; }
-      .tab-content { display: block !important; }
-      code { background: #f1f5f9; color: #0891b2; border-color: #cbd5e1; }
+      .text-gradient { background: none; -webkit-text-fill-color: black; }
+      .text-muted, .text-dim { color: #444 !important; }
+      .arch-block { background: #f8f9fa !important; border: 1px solid #ddd !important; color: #333 !important; }
+      .cd-comment { color: #666; } .cd-keyword { color: #0066cc; } .cd-string { color: #008000; }
     }
   </style>
 </head>
 <body>
 
+<div class="bg-mesh"></div>
+
 <!-- ═══════════════════════ HERO ═══════════════════════ -->
-<div class="container">
+<div class="container fade-in">
   <header class="hero">
-    <div class="hero-eyebrow">iOS &amp; Mobile Platform Engineer</div>
-    <h1 class="hero-name">Burak <em>Coşkun</em></h1>
-    <p class="hero-role">Swift · TypeScript · Java/Spring Boot · Flutter · Python/FastAPI</p>
+    <div class="hero-eyebrow">Portfolio &amp; Architecture Details</div>
+    <h1><span class="text-gradient">Burak Coşkun</span></h1>
+    <p class="hero-role">iOS &amp; Mobile Platform Engineer</p>
     <p class="hero-bio">
-      Computer Science graduate of Sakarya University (Class of 2026), based in İstanbul.
-      I design and ship full-stack mobile products end-to-end — from custom on-device ML inference pipelines
-      and GPU-accelerated serverless compute to Android kiosk systems running in corporate production environments.
-      I care deeply about explicit architecture boundaries, deterministic system behaviour,
-      observable failure modes, and long-term maintainability.
+      Computer Science graduate of Sakarya University, based in Kocaeli.
+      I engineer and ship full-stack mobile products — from custom on-device ML inference pipelines
+      and GPU-accelerated serverless systems to enterprise Android kiosk architectures.
+      I focus on explicit boundaries, deterministic state, and observable failure modes.
     </p>
     <div class="hero-links">
       <a class="link-pill" href="https://github.com/coskunburak" target="_blank">
         <svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-        coskunburak
+        GitHub
       </a>
       <a class="link-pill" href="https://www.linkedin.com/in/csknburak/" target="_blank">
         <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-        csknburak
+        LinkedIn
       </a>
-      <span class="link-pill pill-live" style="cursor:default;">✓ &nbsp;SAU Computer Science · Graduation Thesis: MocapExpo</span>
-      <span class="link-pill" style="cursor:default;">📍 İstanbul, Turkey</span>
+      <span class="link-pill location-pill">📍 Kocaeli, Turkey</span>
     </div>
   </header>
 
-  <!-- Stack -->
   <section class="stack-section">
     <div class="stack-groups">
-      <div class="stack-row">
-        <span class="stack-label">iOS / Apple</span>
+      <div class="stack-col">
+        <h4>APPLE ECOSYSTEM</h4>
         <div class="badges">
-          <span class="badge b-blue">Swift</span><span class="badge b-blue">SwiftUI</span><span class="badge b-blue">UIKit</span>
-          <span class="badge b-blue">SpriteKit</span><span class="badge b-blue">SwiftData</span><span class="badge b-blue">Combine</span>
-          <span class="badge b-pink">Core ML</span><span class="badge b-pink">Metal</span><span class="badge b-pink">Vision</span>
-          <span class="badge b-pink">Core Image</span><span class="badge b-purple">StoreKit 2</span>
-          <span class="badge b-purple">Keychain</span><span class="badge b-gray">Sign in with Apple</span>
+          <span class="badge b-blue">Swift</span><span class="badge b-blue">SwiftUI</span><span class="badge b-pink">Core ML</span><span class="badge b-pink">Metal</span><span class="badge b-purple">StoreKit 2</span><span class="badge b-blue">SwiftData</span>
         </div>
       </div>
-      <div class="stack-row">
-        <span class="stack-label">Cross-Platform</span>
+      <div class="stack-col">
+        <h4>CROSS-PLATFORM</h4>
         <div class="badges">
-          <span class="badge b-cyan">React Native</span><span class="badge b-cyan">Expo</span>
-          <span class="badge b-cyan">TypeScript</span><span class="badge b-cyan">WebView</span>
-          <span class="badge b-green">Flutter</span><span class="badge b-green">Dart</span>
-          <span class="badge b-green">Bloc / Hydrated Bloc</span><span class="badge b-green">GoRouter</span>
-          <span class="badge b-green">Dio</span><span class="badge b-green">Freezed</span>
+          <span class="badge b-cyan">React Native</span><span class="badge b-cyan">TypeScript</span><span class="badge b-green">Flutter</span><span class="badge b-green">Dart</span><span class="badge b-green">Bloc</span>
         </div>
       </div>
-      <div class="stack-row">
-        <span class="stack-label">Backend</span>
+      <div class="stack-col">
+        <h4>BACKEND & INFRA</h4>
         <div class="badges">
-          <span class="badge b-amber">Java 21</span><span class="badge b-amber">Spring Boot 3</span>
-          <span class="badge b-amber">Modular Monolith</span><span class="badge b-amber">Node.js</span>
-          <span class="badge b-amber">Fastify</span><span class="badge b-amber">FastAPI</span>
-          <span class="badge b-amber">PostgreSQL</span><span class="badge b-amber">Redis</span>
-          <span class="badge b-amber">OpenAPI</span><span class="badge b-gray">Zod</span>
-        </div>
-      </div>
-      <div class="stack-row">
-        <span class="stack-label">AI / ML</span>
-        <div class="badges">
-          <span class="badge b-pink">WHAM / SMPL</span><span class="badge b-pink">PyTorch</span>
-          <span class="badge b-pink">Core ML</span><span class="badge b-pink">SymPy</span>
-          <span class="badge b-pink">Gemini API</span><span class="badge b-pink">OpenAI</span>
-          <span class="badge b-pink">provider-neutral routing</span><span class="badge b-pink">Computer Vision</span>
-        </div>
-      </div>
-      <div class="stack-row">
-        <span class="stack-label">Infra / DevOps</span>
-        <div class="badges">
-          <span class="badge b-purple">RunPod Serverless</span><span class="badge b-purple">S3 / MinIO</span>
-          <span class="badge b-purple">Docker</span><span class="badge b-purple">Firebase</span>
-          <span class="badge b-purple">Fastlane</span><span class="badge b-gray">GitHub Actions</span>
-          <span class="badge b-gray">Gradle</span><span class="badge b-gray">ADB</span>
+          <span class="badge b-amber">Java / Spring Boot</span><span class="badge b-amber">Node / Fastify</span><span class="badge b-purple">RunPod</span><span class="badge b-pink">PyTorch</span><span class="badge b-amber">PostgreSQL</span>
         </div>
       </div>
     </div>
   </section>
 </div>
 
-<hr class="divider" />
-
 <!-- ═══════════════════════ FEATURED PROJECTS ═══════════════════════ -->
 <div class="container">
-  <div class="section-header">
-    <h2>Featured Projects</h2>
-    <p>Six production-grade systems — each representing a distinct engineering discipline at scale.</p>
+  <div class="section-header fade-in">
+    <h2>Production Engineering</h2>
+    <p>Deep dives into system architectures, design decisions, and production deployments.</p>
   </div>
 
   <div class="projects">
 
-    <!-- ════════════════════ 1. MOCAPEXPO ════════════════════ -->
-    <article class="project-card accent-amber">
+    <!-- 1. MOCAPEXPO -->
+    <article class="project-card c-amber fade-in">
       <div class="pc-header">
         <div class="pc-meta">
           <div class="pc-title-row">
             <h2>MocapExpo</h2>
-            <span class="proj-tag pt-thesis">⭐ Graduation Thesis</span>
-            <span class="proj-tag pt-prod">Production Architecture</span>
-            <span class="loc-tag">~70,000 LOC</span>
+            <span class="proj-type">⭐ Thesis / Pipeline Architecture</span>
           </div>
           <p class="pc-tagline">
-            End-to-end motion capture pipeline. A React Native mobile app records video and
-            metadata, uploads via signed S3 URLs to a Fastify backend, which dispatches GPU
-            solve jobs to RunPod Serverless. WHAM/SMPL runs per-camera pose estimation,
-            exports BVH artifacts, and an optional dual-camera diagnostic path performs
-            DLT triangulation, reprojection error analysis, and quality gating — all with
-            zero fake-success propagation.
+            End-to-end motion capture pipeline. React Native client records video, streams to S3 via signed URLs. A Fastify backend dispatches GPU jobs to RunPod Serverless where a Python worker runs WHAM/SMPL pose estimation and DLT triangulation. Built with strict no-fake-success invariants.
           </p>
-          <div class="pc-badges">
-            <span class="badge b-cyan">TypeScript</span><span class="badge b-cyan">React Native</span>
-            <span class="badge b-cyan">Expo Dev Client</span><span class="badge b-amber">Node.js / Fastify</span>
-            <span class="badge b-amber">PostgreSQL</span><span class="badge b-amber">S3 / MinIO</span>
-            <span class="badge b-pink">WHAM / SMPL</span><span class="badge b-pink">Computer Vision</span>
-            <span class="badge b-purple">RunPod Serverless</span><span class="badge b-purple">Docker</span>
+          <div class="badges">
+            <span class="badge b-cyan">TypeScript</span><span class="badge b-cyan">React Native</span><span class="badge b-amber">Node.js / Fastify</span><span class="badge b-pink">WHAM / SMPL</span><span class="badge b-purple">RunPod Serverless</span>
           </div>
         </div>
-        <a class="gh-btn" href="https://github.com/coskunburak/mocap" target="_blank">
-          <svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-          github.com/coskunburak/mocap
-        </a>
       </div>
 
-      <div class="pc-body">
+      <div class="arch-block">
+        <span class="ab-title">System Architecture Flow</span>
+<span class="cd-entity">MOBILE (React Native)</span>
+  <span class="cd-comment">│ Creates: Project → Take → CaptureSession</span>
+  <span class="cd-arrow">▼</span> <span class="cd-comment">Multipart upload via pre-signed URL</span>
+<span class="cd-entity">AWS S3 / MINIO</span>
+  <span class="cd-arrow">▼</span> <span class="cd-comment">Webhook / Polling</span>
+<span class="cd-entity">BACKEND API (Node/Fastify)</span>
+  <span class="cd-comment">│ Persists job state in PostgreSQL</span>
+  <span class="cd-arrow">▼</span> <span class="cd-comment">REST Dispatch</span>
+<span class="cd-entity">RUNPOD WORKER (GPU / PyTorch)</span>
+  <span class="cd-keyword">IF</span> <span class="cd-string">Single Camera</span>:
+      <span class="cd-comment">↳ WHAM Solve → SMPL Model → optimized_result.bvh</span>
+  <span class="cd-keyword">IF</span> <span class="cd-string">Dual Camera</span>:
+      <span class="cd-comment">↳ 2D Pose Extraction (Camera A & B)</span>
+      <span class="cd-comment">↳ Timestamp Sync & Intrinsics Calibration</span>
+      <span class="cd-comment">↳ DLT Triangulation (3D Landmark Cloud)</span>
+      <span class="cd-comment">↳ Reprojection Error Gate (Must pass P95 threshold)</span>
+      <span class="cd-keyword">RETURN</span> <span class="cd-string">finalAnimationSource: "true_dual_solve" | "primary_wham"</span>
+      </div>
 
-        <!-- Full System Architecture -->
-        <div class="code-block">
-          <div class="code-block-header"><h4>Full System Architecture &amp; Data Flow</h4></div>
-          <div class="code-block-body"><span class="cd-comment">┌─────────────────────────────────────────────────────────────────────────────────┐</span>
-<span class="cd-comment">│                     MOCAPEXPO — MOTION CAPTURE PIPELINE                        │</span>
-<span class="cd-comment">└─────────────────────────────────────────────────────────────────────────────────┘</span>
-
-<span class="cd-label">MOBILE (React Native / Expo Dev Client)</span>
-  <span class="cd-comment">│  Records video + device metadata (camera intrinsics, frame timestamps)</span>
-  <span class="cd-comment">│  Creates: Project → Take → CaptureSession → Upload</span>
-  <span class="cd-comment">│  Requests signed upload URL from backend</span>
-  <span class="cd-arrow">▼</span> multipart upload direct to S3/MinIO (never proxied through backend)
-
-<span class="cd-label">BACKEND API (Node.js / Fastify / TypeScript)</span>
-  <span class="cd-comment">│</span>
-  <span class="cd-comment">├── Entities:  Project / Take / CaptureSession / Upload / Job / Export / Artifact</span>
-  <span class="cd-comment">├── Storage:   PostgreSQL (schema migrations) + S3-compatible (MinIO/AWS S3)</span>
-  <span class="cd-comment">├── Auth:      Signed URLs for upload/download — backend never handles raw bytes</span>
-  <span class="cd-comment">├── Jobs:      Creates Job record → dispatches to RunPod Serverless endpoint</span>
-  <span class="cd-comment">│              RUNPOD_DISPATCH_ENABLED | RUNPOD_ENDPOINT_ID | timeout config</span>
-  <span class="cd-comment">└── Results:   Worker writes artifacts to S3, backend stores Export records</span>
-  <span class="cd-arrow">▼</span>
-
-<span class="cd-label">WORKER (RunPod Serverless — Docker / Python + PyTorch)</span>
-  <span class="cd-comment">│</span>
-  <span class="cd-comment">├── Step 1:  Claim or receive Job from backend</span>
-  <span class="cd-comment">├── Step 2:  Download uploaded video(s) from S3</span>
-  <span class="cd-comment">├── Step 3:  Normalize video (resolution, fps, orientation)</span>
-  <span class="cd-comment">│</span>
-  <span class="cd-comment">├── PRIMARY PATH (always runs, always production-safe)</span>
-  <span class="cd-comment">│   ├── WHAM solve on primary camera video</span>
-  <span class="cd-comment">│   ├── SMPL body model pose estimation per frame</span>
-  <span class="cd-comment">│   └── → optimized_result.bvh  (BVH animation artifact)</span>
-  <span class="cd-comment">│</span>
-  <span class="cd-comment">└── DUAL-CAMERA DIAGNOSTIC PATH (if 2 videos provided)</span>
-      <span class="cd-comment">├── 2D pose extraction per camera (pose_frames_device_0.json / _1.json)</span>
-      <span class="cd-comment">├── Frame sync (matchedFrameCount, averageTimeDeltaMs, syncConfidence)</span>
-      <span class="cd-comment">├── Camera calibration (intrinsics — fallback or real checkerboard)</span>
-      <span class="cd-comment">├── DLT triangulation → 3D landmark cloud</span>
-      <span class="cd-comment">├── → multi_view_sync.json / camera_calibration.json</span>
-      <span class="cd-comment">├── → dual_reconstruction.json / multi_view_reconstruction.json</span>
-      <span class="cd-comment">├── → quality_report.multiView  (reprojectionErrorPx, P95, ratios)</span>
-      <span class="cd-comment">└── Gate: only if all checks pass → finalAnimationSource: "true_dual_solve"</span>
-                          <span class="cd-comment">otherwise  → finalAnimationSource: "primary_wham"</span>
-
-<span class="cd-label">RESULT SCREEN (Mobile)</span>
-  <span class="cd-comment">Reads Export list + quality_report_json</span>
-  <span class="cd-comment">Shows WHAM outputs + Multi-View Diagnostics panel (when available)</span>
-  <span class="cd-comment">Displays: finalAnimationSource / primaryCameraFallbackUsed / all QA metrics</span></div>
-        </div>
-
-        <div class="grid-2">
-          <!-- Repository structure -->
-          <div class="code-block">
-            <div class="code-block-header"><h4>Repository Structure</h4></div>
-            <div class="code-block-body"><span class="cd-comment">Mocapexpo/</span>
-<span class="cd-key">├── app/</span>               <span class="cd-comment">React Native / Expo screens</span>
-<span class="cd-key">│   ├── capture/</span>       <span class="cd-comment">Video recording + metadata</span>
-<span class="cd-key">│   ├── projects/</span>      <span class="cd-comment">Project / Take / Session UI</span>
-<span class="cd-key">│   └── results/</span>       <span class="cd-comment">Export list + diagnostics</span>
-<span class="cd-key">├── backend/</span>
-<span class="cd-key">│   ├── src/</span>
-<span class="cd-key">│   │   ├── routes/</span>    <span class="cd-comment">Fastify typed routes</span>
-<span class="cd-key">│   │   ├── repos/</span>     <span class="cd-comment">PostgreSQL repositories</span>
-<span class="cd-key">│   │   ├── storage/</span>   <span class="cd-comment">S3 signed URL logic</span>
-<span class="cd-key">│   │   ├── jobs/</span>      <span class="cd-comment">RunPod dispatch adapter</span>
-<span class="cd-key">│   │   └── worker/</span>    <span class="cd-comment">Worker handler interface</span>
-<span class="cd-key">│   ├── migrations/</span>    <span class="cd-comment">PostgreSQL schema migrations</span>
-<span class="cd-key">│   ├── .env.example</span>   <span class="cd-comment">Safe template (no secrets)</span>
-<span class="cd-key">│   └── docker-compose</span> <span class="cd-comment">Postgres + MinIO local stack</span>
-<span class="cd-key">├── worker/</span>            <span class="cd-comment">Python WHAM adapter wrapper</span>
-<span class="cd-key">└── tests/</span>
-    <span class="cd-key">├── synthetic/</span>     <span class="cd-comment">Golden test data</span>
-    <span class="cd-key">├── qa/</span>            <span class="cd-comment">Real-device QA checklist</span>
-    <span class="cd-key">└── adapters/</span>      <span class="cd-comment">Pose extraction test stubs</span></div>
-          </div>
-
-          <!-- Quality metrics -->
-          <div class="info-block">
-            <h4>Quality Report Metrics</h4>
-            <div class="artifacts">
-              <span class="artifact">matchedFrameCount</span>
-              <span class="artifact">averageTimeDeltaMs</span>
-              <span class="artifact">syncConfidence</span>
-              <span class="artifact">reprojectionErrorPx</span>
-              <span class="artifact">reprojectionP95Px</span>
-              <span class="artifact">triangulatedLandmarkRatio</span>
-              <span class="artifact">fallbackLandmarkRatio</span>
-              <span class="artifact">calibrationQualityScore</span>
-              <span class="artifact">intrinsicsFallbackUsed</span>
-              <span class="artifact">primaryCameraFallbackUsed</span>
-              <span class="artifact">finalAnimationSource</span>
-            </div>
-            <h4 style="margin-top:10px;">Output Artifact Types</h4>
-            <div class="artifacts">
-              <span class="artifact">optimized_result.bvh</span>
-              <span class="artifact">pose_frames_device_0.json</span>
-              <span class="artifact">pose_frames_device_1.json</span>
-              <span class="artifact">multi_view_sync.json</span>
-              <span class="artifact">camera_calibration.json</span>
-              <span class="artifact">dual_reconstruction.json</span>
-              <span class="artifact">multi_view_reconstruction.json</span>
-              <span class="artifact">dual_fit_report.json</span>
-              <span class="artifact">optimized_solved_motion.json</span>
-              <span class="artifact">quality_report_json</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="grid-2">
-          <div class="info-block">
-            <h4>Engineering Decisions</h4>
-            <ul>
-              <li class="green"><strong>RunPod Serverless</strong> — GPU compute on demand, no fixed infrastructure cost. Jobs dispatched via REST; worker pulls video from S3 directly.</li>
-              <li class="green"><strong>S3 signed URLs</strong> — Backend never proxies video bytes. Mobile uploads directly to object storage; backend only issues time-limited presigned tokens.</li>
-              <li class="amber"><strong>Single-camera WHAM is always the production path</strong> — dual-camera data never overrides the primary solve unless all quality gates pass explicitly.</li>
-              <li class="amber"><strong>No fake success policy</strong> — missing_calibration, missing_sync, missing_pose_frames flags are explicit. System fails loudly with reason codes, never silently.</li>
-              <li><strong>WHAM/SMPL assets not in repo</strong> — licensed models distributed via password manager (1Password/Bitwarden), not version control.</li>
-              <li><strong>Docker Compose local stack</strong> — PostgreSQL + MinIO for development without any cloud dependency.</li>
-            </ul>
-          </div>
-          <div class="info-block">
-            <h4>Dual-Camera Diagnostic Pipeline Detail</h4>
-            <ul>
-              <li><strong>Per-camera 2D pose extraction</strong> — MediaPipe or WHAM 2D adapter, outputs <code>pose_frames_device_N.json</code></li>
-              <li><strong>Frame sync</strong> — timestamp matching across device clocks; reports <code>averageTimeDeltaMs</code> and <code>syncConfidence</code></li>
-              <li><strong>Camera calibration</strong> — fallback to known device intrinsics; real calibration via checkerboard/AprilTag (roadmap)</li>
-              <li><strong>DLT triangulation</strong> — Direct Linear Transform for 3D landmark recovery from stereo 2D keypoints</li>
-              <li><strong>Reprojection error gate</strong> — <code>reprojectionErrorPx</code> and <code>reprojectionP95Px</code> must be below threshold for dual solve to be accepted</li>
-              <li><strong>Diagnostic-only flag</strong> — reconstruction may pass quality check but still be diagnostic-only; never becomes final animation unless all gates pass</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="interview-tips">
-          <h4>Interview Talking Points</h4>
+      <div class="feature-grid">
+        <div class="feature-box">
+          <h4><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" fill="none" stroke-width="2"/></svg> Key Engineering Decisions</h4>
           <ul>
-            <li>"I designed the entire pipeline from scratch — mobile app, backend API, worker adapter, and quality reporting. It's my graduation thesis and I built it solo."</li>
-            <li>"The system has a strict no-fake-success contract. Every failure mode has an explicit reason code. finalAnimationSource is always present and truthful — either 'primary_wham' or 'true_dual_solve'."</li>
-            <li>"I used RunPod Serverless for GPU compute instead of provisioning a GPU server, which eliminated fixed infrastructure cost while keeping the architecture cloud-agnostic."</li>
-            <li>"The dual-camera path produces 10+ quality metrics. These are diagnostic, not just status booleans — you can tell exactly why a solve succeeded or failed."</li>
-            <li>"SMPL and WHAM assets never enter the repository. This is a deliberate security decision — licensed assets and credentials flow through password managers only."</li>
+            <li><strong>Serverless GPU:</strong> Chose RunPod over EC2 to eliminate idle costs while retaining heavy PyTorch inference capabilities.</li>
+            <li><strong>Direct S3 Uploads:</strong> Backend issues signed URLs. Node.js never proxies video bytes, saving massive bandwidth and memory.</li>
+            <li><strong>No Fake Success:</strong> Dual-camera solves produce 10+ QA metrics. If reprojection error is too high, it fails explicitly rather than returning bad data.</li>
+          </ul>
+        </div>
+        <div class="interview-box">
+          <h4>Interview Highlights</h4>
+          <ul>
+            <li>I built the entire stack solo: the mobile app, the backend orchestrator, and the Python GPU worker.</li>
+            <li>Security focus: Machine learning assets (WHAM/SMPL models) are excluded from the git repo and distributed securely via 1Password CLI in CI.</li>
+            <li>The system is resilient: failure in the dual-camera diagnostic path gracefully degrades to the primary WHAM solve, clearly documented in the API response.</li>
           </ul>
         </div>
       </div>
     </article>
 
-    <!-- ════════════════════ 2. VERIFIED AI ════════════════════ -->
-    <article class="project-card accent-blue">
+    <!-- 2. VERIFIED AI -->
+    <article class="project-card c-blue fade-in">
       <div class="pc-header">
         <div class="pc-meta">
           <div class="pc-title-row">
             <h2>Verified AI</h2>
-            <span class="proj-tag pt-prod">Production Platform</span>
-            <span class="proj-tag pt-ai">AI + Deterministic Verification</span>
-            <span class="loc-tag">~65,000 LOC + 45 docs</span>
+            <span class="proj-type">Production AI Platform</span>
           </div>
           <p class="pc-tagline">
-            iOS-first AI mathematics learning platform. Converts raw student math questions into structured problems,
-            produces AI-assisted solutions, cross-checks every answer with an independent SymPy verifier,
-            tracks student mastery via a persistent knowledge graph, and drives an adaptive practice engine —
-            all backed by a Java 21 Spring Boot modular monolith and documented with 45+ canonical technical documents plus 4 formal ADRs.
+            iOS-first mathematics platform. Swift/SwiftUI client backed by a Java 21 Spring Boot modular monolith. It orchestrates provider-neutral LLMs and programmatically verifies every AI-generated math solution using a deterministic SymPy (Python) engine.
           </p>
-          <div class="pc-badges">
-            <span class="badge b-amber">Java 21</span><span class="badge b-amber">Spring Boot 3</span>
-            <span class="badge b-amber">Modular Monolith</span><span class="badge b-blue">Swift / SwiftUI</span>
-            <span class="badge b-blue">SwiftData</span><span class="badge b-pink">FastAPI / Python</span>
-            <span class="badge b-pink">SymPy</span><span class="badge b-amber">PostgreSQL</span>
-            <span class="badge b-amber">Redis</span><span class="badge b-purple">StoreKit 2</span>
-            <span class="badge b-purple">OpenAPI</span><span class="badge b-gray">Sign in with Apple</span>
+          <div class="badges">
+            <span class="badge b-amber">Java 21 / Spring Boot</span><span class="badge b-blue">SwiftUI</span><span class="badge b-pink">SymPy</span><span class="badge b-purple">Modular Monolith</span><span class="badge b-amber">PostgreSQL</span>
           </div>
         </div>
-        <a class="gh-btn" href="https://github.com/coskunburak/verified_ai" target="_blank">
-          <svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-          github.com/coskunburak/verified_ai
-        </a>
       </div>
 
-      <div class="pc-body">
+      <div class="arch-block">
+        <span class="ab-title">Trust & Verification Architecture</span>
+<span class="cd-entity">iOS CLIENT</span> <span class="cd-comment">→ Sends raw math problem (Image/Text)</span>
+<span class="cd-arrow">↓</span>
+<span class="cd-entity">SPRING BOOT MONOLITH (AI Orchestration Module)</span>
+  <span class="cd-comment">│ Port/Adapter pattern for LLM Providers</span>
+  <span class="cd-arrow">→</span> <span class="cd-keyword">call</span> <span class="cd-entity">Gemini/GPT-4o</span> <span class="cd-comment">→ Returns UNTRUSTED solution steps</span>
+  <span class="cd-arrow">↓</span>
+<span class="cd-entity">SPRING BOOT (Verification Module)</span>
+  <span class="cd-comment">│ Business invariant: AI output cannot be marked VERIFIED internally.</span>
+  <span class="cd-arrow">→</span> <span class="cd-keyword">call</span> <span class="cd-entity">INTERNAL MATH VERIFIER (FastAPI + Python SymPy)</span>
+      <span class="cd-comment">↳ Parses algebraic expressions</span>
+      <span class="cd-comment">↳ Executes deterministic symbolic computation</span>
+      <span class="cd-keyword">RETURN</span> <span class="cd-string">VERIFIED | FAILED | CANNOT_VERIFY</span>
+  <span class="cd-arrow">↓</span>
+<span class="cd-entity">iOS CLIENT</span> <span class="cd-comment">← Displays solution ONLY with backend-authoritative verification badge</span>
+      </div>
 
-        <div class="code-block">
-          <div class="code-block-header"><h4>Full System Architecture — Modular Monolith + iOS Client</h4></div>
-          <div class="code-block-body"><span class="cd-comment">┌──────────────────────────────────────────────────────────────────────────────┐</span>
-<span class="cd-comment">│                    VERIFIED AI — PLATFORM ARCHITECTURE                       │</span>
-<span class="cd-comment">└──────────────────────────────────────────────────────────────────────────────┘</span>
-
-<span class="cd-label">iOS CLIENT  (Swift / SwiftUI — Clean Architecture)</span>
-<span class="cd-comment">┌──────────────────────────────────────────────────────────────────────────┐</span>
-<span class="cd-comment">│  App/            AppDIContainer · AppRouter · LaunchCoordinator          │</span>
-<span class="cd-comment">│  Features/       SwiftUI screens + ViewModels — one module per feature   │</span>
-<span class="cd-comment">│    ├── Capture   (camera, OCR, question parsing)                         │</span>
-<span class="cd-comment">│    ├── Solve     (solution display, step-by-step, verification badge)    │</span>
-<span class="cd-comment">│    ├── Practice  (adaptive drill queue, skill cards)                     │</span>
-<span class="cd-comment">│    ├── Exam      (timed mock exam, readiness score)                      │</span>
-<span class="cd-comment">│    └── Profile   (mastery graph, progress, subscription)                 │</span>
-<span class="cd-comment">│  Domain/         Entities · Use Cases · Repository Protocols             │</span>
-<span class="cd-comment">│                  (zero external dependencies — pure Swift)               │</span>
-<span class="cd-comment">│  Data/           URLSession networking · SwiftData offline cache         │</span>
-<span class="cd-comment">│                  Keychain · StoreKit 2 purchase handler                  │</span>
-<span class="cd-comment">│                  Analytics stubs · Crash stubs (behind protocols)        │</span>
-<span class="cd-comment">│  Core/           Shared UI components · logging · concurrency helpers    │</span>
-<span class="cd-comment">└───────────────────────────────────┬──────────────────────────────────────┘</span>
-                                    <span class="cd-comment">│  OpenAPI REST only (never contacts verifier)</span>
-<span class="cd-label">SPRING BOOT MODULAR MONOLITH  (Java 21)</span>
-<span class="cd-comment">┌────────────────────────────────────────────────────────────────────────────────────────┐</span>
-<span class="cd-comment">│  identity/     Auth · Sign in with Apple · JWT · Device trust                         │</span>
-<span class="cd-comment">│  billing/      StoreKit 2 server notifications · Free/Pro/Pro+ entitlement             │</span>
-<span class="cd-comment">│  curriculum/   Skill ontology · curriculum graph · concept taxonomy                   │</span>
-<span class="cd-comment">│  solve/        Problem structuring · AI orchestration → verification pipeline          │</span>
-<span class="cd-comment">│  │  AI Orchestration Layer (provider-neutral ports/adapters):                          │</span>
-<span class="cd-comment">│  │    ModelRouter → [GeminiAdapter | GPT4oAdapter | ClaudeAdapter]                    │</span>
-<span class="cd-comment">│  │    PromptRegistry (versioned prompts + structured output schemas)                   │</span>
-<span class="cd-comment">│  │    ↓ AI response (UNTRUSTED)                                                       │</span>
-<span class="cd-comment">│  │    VerificationClient → math-verifier service (internal, never public)              │</span>
-<span class="cd-comment">│  │    ↓ VerificationPolicy.assign() → VERIFIED | FAILED | UNCERTAIN                   │</span>
-<span class="cd-comment">│  mastery/      Skill mastery model · knowledge graph · BKT/IRT scoring                │</span>
-<span class="cd-comment">│  adaptive/     Next-best-action engine · study planner · exam mode                    │</span>
-<span class="cd-comment">│  mistakes/     Error taxonomy · diagnosis pipeline · feedback engine                   │</span>
-<span class="cd-comment">│                                                                                        │</span>
-<span class="cd-comment">│  PostgreSQL ──── source of truth for all learning state + mastery data                 │</span>
-<span class="cd-comment">│  Redis ────────── disposable cache only (never canonical learning storage)             │</span>
-<span class="cd-comment">└──────────────────────────────────────┬─────────────────────────────────────────────────┘</span>
-                                       <span class="cd-comment">│  Internal HTTP only (not exposed externally)</span>
-<span class="cd-label">MATH VERIFIER  (FastAPI / Python / SymPy)</span>
-<span class="cd-comment">┌─────────────────────────────────────────────────────────────────────────┐</span>
-<span class="cd-comment">│  Receives structured problem + AI solution                              │</span>
-<span class="cd-comment">│  Runs deterministic SymPy computation independently                     │</span>
-<span class="cd-comment">│  Returns: VERIFIED | FAILED | CANNOT_VERIFY (with confidence reason)   │</span>
-<span class="cd-comment">│  Isolated JVM boundary — independently scalable, separately deployable  │</span>
-<span class="cd-comment">└─────────────────────────────────────────────────────────────────────────┘</span></div>
-        </div>
-
-        <div class="grid-2">
-          <div class="code-block">
-            <div class="code-block-header"><h4>Repository Layout</h4></div>
-            <div class="code-block-body"><span class="cd-key">apps/</span>
-<span class="cd-comment">  ios/</span>              <span class="cd-comment">Swift/SwiftUI iOS app shell</span>
-<span class="cd-key">services/</span>
-<span class="cd-comment">  api/</span>              <span class="cd-comment">Java 21 Spring Boot monolith</span>
-<span class="cd-comment">  math-verifier/</span>   <span class="cd-comment">FastAPI / SymPy verifier</span>
-<span class="cd-key">packages/</span>
-<span class="cd-comment">  contracts/</span>        <span class="cd-comment">OpenAPI + shared API contracts</span>
-<span class="cd-comment">  schemas/</span>          <span class="cd-comment">Versioned schemas</span>
-<span class="cd-comment">  curriculum/</span>       <span class="cd-comment">Skill ontology artifacts</span>
-<span class="cd-key">infra/</span>             <span class="cd-comment">Local + deployment infra</span>
-<span class="cd-key">scripts/</span>           <span class="cd-comment">Dev, quality, security automation</span>
-<span class="cd-key">docs/</span>
-<span class="cd-comment">  product/</span>          <span class="cd-comment">01–05: Vision, personas, journeys</span>
-<span class="cd-comment">  domain/</span>           <span class="cd-comment">06–10: DDD model, invariants</span>
-<span class="cd-comment">  architecture/</span>     <span class="cd-comment">11–14: System, API, async</span>
-<span class="cd-comment">  ios/</span>              <span class="cd-comment">15–18: iOS arch, design system</span>
-<span class="cd-comment">  backend/</span>          <span class="cd-comment">19–21: Spring, modules, authz</span>
-<span class="cd-comment">  data/</span>             <span class="cd-comment">22–24: PostgreSQL model, PII</span>
-<span class="cd-comment">  ai/</span>               <span class="cd-comment">25–29: AI routing, prompts, eval</span>
-<span class="cd-comment">  learning/</span>         <span class="cd-comment">30–34: Mastery, adaptive, exam</span>
-<span class="cd-comment">  security/</span>         <span class="cd-comment">35–36: Threat model, privacy</span>
-<span class="cd-comment">  operations/</span>       <span class="cd-comment">37–39, 70–71: SLOs, CI/CD</span>
-<span class="cd-comment">  quality/</span>          <span class="cd-comment">40–42, 69: Test strategy, RTM</span>
-<span class="cd-comment">  roadmap/</span>          <span class="cd-comment">43, 67–68: Roadmap, coverage</span>
-<span class="cd-comment">  adr/</span>              <span class="cd-comment">4 Architecture Decision Records</span>
-<span class="cd-comment">  integrations/</span>     <span class="cd-comment">44–45: NotebookLM/Codex context</span></div>
-          </div>
-
-          <div class="info-block">
-            <h4>Architecture Decision Records (ADRs)</h4>
-            <ul>
-              <li class="green"><strong>ADR-001 — PostgreSQL over Firestore:</strong> Relational learning state, ACID guarantees, complex JOIN queries for mastery graph, no vendor lock-in, no per-read pricing.</li>
-              <li class="green"><strong>ADR-002 — Modular Monolith over Microservices:</strong> Explicit module boundaries without distributed systems complexity. Each module has a defined contract; microservices can be extracted later if needed.</li>
-              <li class="green"><strong>ADR-003 — Provider-Neutral AI:</strong> ModelRouter behind ports/adapters pattern. Swapping Gemini for GPT-4o is a single-module change. Prompt versioning is independent of provider.</li>
-              <li class="green"><strong>ADR-004 — Separate Python Math Verifier:</strong> SymPy runs in Python outside JVM — independently deployable, independently scalable, mathematically deterministic by design.</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="decisions">
-          <div class="decision">
-            <div class="decision-title">Non-Negotiable System Invariant #1: AI output is untrusted input</div>
-            <div class="decision-body">AI-generated math solutions flow through the SymPy verifier before any VERIFIED status is assigned. The <code>VerificationPolicy</code> class is the only code path permitted to set verification status. This is enforced by module visibility — AI adapters cannot import the verification domain.</div>
-            <div class="decision-verdict">✓ Enforced at compile time via module boundaries</div>
-          </div>
-          <div class="decision">
-            <div class="decision-title">Non-Negotiable System Invariant #2: Backend authoritative for all gating</div>
-            <div class="decision-body">The iOS app holds no access-control logic. Free/Pro/Pro+ entitlement decisions are made exclusively by the Spring Boot API, which receives and validates StoreKit 2 server notifications. The iOS app presents whatever the server says the user can access.</div>
-            <div class="decision-verdict">✓ iOS app has no entitlement decision code</div>
-          </div>
-          <div class="decision">
-            <div class="decision-title">Non-Negotiable System Invariant #3: iOS never contacts the math verifier</div>
-            <div class="decision-body">The FastAPI/SymPy verifier is internal infrastructure. It is not exposed externally and has no public endpoint. All verification requests originate from the Spring Boot backend. This prevents prompt injection through the client and keeps verifier behaviour server-controlled.</div>
-            <div class="decision-verdict">✓ Verifier URL is not present anywhere in iOS codebase</div>
-          </div>
-          <div class="decision">
-            <div class="decision-title">Non-Negotiable System Invariant #4: Redis is disposable</div>
-            <div class="decision-body">Redis holds only cache data. Learning state, mastery scores, and skill records are always persisted to PostgreSQL. If Redis is wiped, the system recovers fully from PostgreSQL. No user-facing feature depends on Redis availability.</div>
-            <div class="decision-verdict">✓ All learning writes go to PostgreSQL first</div>
-          </div>
-        </div>
-
-        <div class="interview-tips">
-          <h4>Interview Talking Points</h4>
+      <div class="feature-grid">
+        <div class="feature-box">
+          <h4><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z" stroke="currentColor" fill="none" stroke-width="2"/><path d="M9 9h6v6H9z" fill="currentColor"/></svg> System Invariants (ADRs)</h4>
           <ul>
-            <li>"I wrote 45+ technical documentation files — product vision, domain model, architecture, iOS, backend, data, AI, security, operations, quality, and roadmap. The docs are optimized for both humans and AI agents like NotebookLM and Codex."</li>
-            <li>"The AI orchestration is provider-neutral by design. Switching from Gemini to GPT-4o is a one-module change. I implemented this as a ports-and-adapters pattern inside the Spring Boot monolith."</li>
-            <li>"Every AI solution is independently verified by SymPy — a symbolic math library that produces deterministic results. I chose Python/FastAPI for the verifier to keep it outside the JVM and independently scalable."</li>
-            <li>"I chose Modular Monolith over microservices deliberately. I documented this in ADR-002: you get explicit boundaries without distributed systems overhead. The boundaries are real — module contracts prevent illegal cross-module access."</li>
-            <li>"The system has a learning intelligence layer: mistake diagnosis, a skill mastery model, adaptive practice selection, and exam readiness scoring. These are separate bounded contexts with their own domain models."</li>
+            <li><strong>ADR-002 (Modular Monolith):</strong> Chose strict module boundaries in Java over microservices to avoid distributed complexity while maintaining isolation.</li>
+            <li><strong>ADR-004 (Separate Python Verifier):</strong> SymPy runs outside the JVM. The verifier is independently scalable and inaccessible from the public internet.</li>
+            <li><strong>Backend Authoritative:</strong> iOS app holds zero entitlement or verification logic; everything is strictly server-driven.</li>
+          </ul>
+        </div>
+        <div class="interview-box">
+          <h4>Interview Highlights</h4>
+          <ul>
+            <li>I wrote 45+ canonical technical documents and 4 formal ADRs for this project, optimizing them for both human engineers and AI context (NotebookLM/Codex).</li>
+            <li>The AI routing is provider-neutral. Switching from Gemini to GPT-4o is a single adapter configuration change without touching business logic.</li>
+            <li>I specifically designed it so the iOS client can <i>never</i> directly contact the Python verifier, preventing prompt-injection attacks from bypassing the gateway.</li>
           </ul>
         </div>
       </div>
     </article>
 
-    <!-- ════════════════════ 3. GLOWSTUDIO AI ════════════════════ -->
-    <article class="project-card accent-pink">
+    <!-- 3. GLOWSTUDIO AI -->
+    <article class="project-card c-pink fade-in">
       <div class="pc-header">
         <div class="pc-meta">
           <div class="pc-title-row">
             <h2>GlowStudio AI</h2>
-            <span class="proj-tag pt-ios">Native iOS / iPadOS</span>
-            <span class="proj-tag pt-ai">On-Device ML · Custom Model</span>
-            <span class="loc-tag">~60,000 LOC</span>
+            <span class="proj-type">On-Device Machine Learning</span>
           </div>
           <p class="pc-tagline">
-            Offline-first iOS/iPadOS portrait photo editing app. All ML inference runs on-device —
-            a custom face parsing model trained with PyTorch and exported to Core ML segments the face into skin,
-            lips, eyes, and hair regions. Metal shaders composite beauty effects on GPU.
-            Clean Architecture with five explicit layers, StoreKit 2 subscription gating,
-            and an automated BeautyQA mask test runner for continuous visual regression testing.
+            Offline-first iOS portrait editor. A custom PyTorch face parsing model exported to Core ML runs entirely on-device. It generates segmentation masks (lips, skin, hair) used by custom Metal shaders and Core Image filters for real-time rendering.
           </p>
-          <div class="pc-badges">
-            <span class="badge b-blue">Swift</span><span class="badge b-blue">SwiftUI</span>
-            <span class="badge b-blue">iOS 18.4</span><span class="badge b-pink">Core ML</span>
-            <span class="badge b-pink">Metal</span><span class="badge b-pink">Vision</span>
-            <span class="badge b-pink">Core Image</span><span class="badge b-pink">PhotosUI</span>
-            <span class="badge b-pink">PyTorch → Core ML</span>
-            <span class="badge b-purple">StoreKit 2</span><span class="badge b-purple">Clean Architecture</span>
+          <div class="badges">
+            <span class="badge b-pink">Core ML</span><span class="badge b-pink">Metal / Core Image</span><span class="badge b-blue">SwiftUI</span><span class="badge b-purple">Clean Architecture</span>
           </div>
         </div>
-        <a class="gh-btn" href="https://github.com/coskunburak/glowStudioAi" target="_blank">
-          <svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-          github.com/coskunburak/glowStudioAi
-        </a>
       </div>
 
-      <div class="pc-body">
+      <div class="arch-block">
+        <span class="ab-title">On-Device Inference & Rendering Loop</span>
+<span class="cd-comment">// 1. Model Training (External)</span>
+<span class="cd-entity">PyTorch CNN</span> <span class="cd-arrow">→</span> <span class="cd-keyword">export(ONNX)</span> <span class="cd-arrow">→</span> <span class="cd-keyword">coremltools</span> <span class="cd-arrow">→</span> <span class="cd-string">FaceParser.mlmodel</span>
 
-        <div class="code-block">
-          <div class="code-block-header"><h4>Clean Architecture + On-Device Rendering Pipeline</h4></div>
-          <div class="code-block-body"><span class="cd-comment">┌──────────────────────────────────────────────────────────────────────────────────┐</span>
-<span class="cd-comment">│                  GLOWSTUDIO AI — LAYER ARCHITECTURE                              │</span>
-<span class="cd-comment">└──────────────────────────────────────────────────────────────────────────────────┘</span>
+<span class="cd-comment">// 2. iOS Engine Layer (Offline)</span>
+<span class="cd-entity">Apple Vision</span> <span class="cd-comment">→ Detects face bounding box & 76-point mesh</span>
+<span class="cd-entity">Core ML</span>      <span class="cd-comment">→ Runs FaceParser on cropped region → Soft Masks (Skin, Lips, Eyes)</span>
+<span class="cd-arrow">↓</span>
+<span class="cd-entity">Core Image</span>   <span class="cd-comment">→ CIFilter chains apply beauty effects (smoothing, tone)</span>
+<span class="cd-entity">Metal</span>        <span class="cd-comment">→ Custom .metal shaders handle complex blending (e.g. Iris recoloring) using the ML masks</span>
+<span class="cd-arrow">↓</span>
+<span class="cd-entity">MTKView</span>      <span class="cd-comment">→ Real-time 60fps preview rendering</span>
+      </div>
 
-<span class="cd-label">App Layer</span>         GlowStudioAIApp · AppDIContainer (manual DI root) · AppRouter
-                   LaunchCoordinator · RootShell
-
-<span class="cd-label">Features Layer</span>    (SwiftUI screens + @Observable ViewModels)
-  <span class="cd-comment">├── EditorFeature     — main editing canvas, tool palette, history stack</span>
-  <span class="cd-comment">├── RetouchFeature    — skin smoothing, blemish, tone, eye whites</span>
-  <span class="cd-comment">├── MakeupFeature     — lip color, blush, eyeshadow, contouring, lashes</span>
-  <span class="cd-comment">├── IrisFeature       — per-eye iris recoloring with pupil-aware masking</span>
-  <span class="cd-comment">├── AIRecommend       — context-aware preset suggestions from face analysis</span>
-  <span class="cd-comment">├── ExportFeature     — quality-controlled export, format selection</span>
-  <span class="cd-comment">└── SubscriptionFlow  — StoreKit 2 paywall, entitlement display</span>
-
-<span class="cd-label">Domain Layer</span>       (zero external dependencies — pure Swift value types)
-  <span class="cd-comment">├── Entities:  Photo, FaceRegion, BeautyEffect, EditHistory, Preset, Subscription</span>
-  <span class="cd-comment">├── UseCases:  ApplyBeautyEffect · ExportPhoto · PurchasePremium · AnalyseFace</span>
-  <span class="cd-comment">└── Protocols: PhotoRepository · EffectRepository · SubscriptionRepository</span>
-
-<span class="cd-label">Data Layer</span>         (implements Domain protocols — no Domain knowledge of Data)
-  <span class="cd-comment">├── Repositories: PhotoRepositoryImpl · EditHistoryRepositoryImpl</span>
-  <span class="cd-comment">├── StoreKit 2:   PurchaseHandler · EntitlementCache · ServerNotificationHandler</span>
-  <span class="cd-comment">├── Storage:      File-based asset storage · UserDefaults for preferences</span>
-  <span class="cd-comment">└── Stubs:        AnalyticsStub · CrashReportingStub (protocol-backed, swappable)</span>
-
-<span class="cd-label">Engine Layer</span>       (rendering, inference, processing — isolated from UI)
-  <span class="cd-comment">│</span>
-  <span class="cd-comment">├── Import Pipeline</span>
-  <span class="cd-comment">│   PhotosUI picker → orientation normalization → CIImage</span>
-  <span class="cd-comment">│</span>
-  <span class="cd-comment">├── Face Detection &amp; Region Building  (Apple Vision framework)</span>
-  <span class="cd-comment">│   VNDetectFaceLandmarksRequest → 76-point landmark mesh</span>
-  <span class="cd-comment">│   FaceRegionBuilder → CIFilter-ready polygon masks per region</span>
-  <span class="cd-comment">│</span>
-  <span class="cd-comment">├── Core ML Inference  (on-device, offline-capable)</span>
-  <span class="cd-comment">│   FaceParserModel.mlmodel (v0.1 — custom PyTorch-trained + exported)</span>
-  <span class="cd-comment">│   Segmentation output: skin · lips · eyes · hair · nose</span>
-  <span class="cd-comment">│   Used as soft masks for beauty rendering per region</span>
-  <span class="cd-comment">│</span>
-  <span class="cd-comment">├── Core Image Rendering   (CPU + GPU compositing)</span>
-  <span class="cd-comment">│   BeautyEffectGraph: CIFilter chain per effect type</span>
-  <span class="cd-comment">│   Mask blending: CIBlendWithMask for region-isolated effects</span>
-  <span class="cd-comment">│</span>
-  <span class="cd-comment">├── Metal Acceleration    (GPU shaders for real-time preview)</span>
-  <span class="cd-comment">│   MTKView for live preview · Custom .metal shaders for iris / morph</span>
-  <span class="cd-comment">│</span>
-  <span class="cd-comment">└── Export Pipeline</span>
-      <span class="cd-comment">CIContext → CGImage → UIImage → HEIC/JPEG quality-controlled write</span>
-
-<span class="cd-label">Core Layer</span>        (shared infrastructure — used by all layers)
-  <span class="cd-comment">Logging (os.Logger wrappers) · Persistence helpers · Reusable UI atoms</span>
-  <span class="cd-comment">Concurrency helpers (MainActor wrappers) · Imaging utilities</span>
-  <span class="cd-comment">BeautyEngine subsystem (effect orchestration, history)</span></div>
-        </div>
-
-        <div class="grid-2">
-          <div class="code-block">
-            <div class="code-block-header"><h4>ML Training Pipeline</h4></div>
-            <div class="code-block-body"><span class="cd-label">makeup-ai-training/  (external — PyTorch)</span>
-
-<span class="cd-comment">Training stack:</span>
-<span class="cd-key">  Framework:</span>   <span class="cd-val">PyTorch + torchvision</span>
-<span class="cd-key">  Architecture:</span><span class="cd-val">Semantic segmentation CNN</span>
-<span class="cd-key">  Classes:</span>     <span class="cd-val">skin · lips · eyes · hair</span>
-<span class="cd-comment">                nose · background</span>
-<span class="cd-key">  Training:</span>    <span class="cd-val">RunPod GPU (same infra as</span>
-<span class="cd-comment">                MocapExpo) — datasets/</span>
-<span class="cd-comment">                folder (git-ignored)</span>
-
-<span class="cd-comment">Export pipeline:</span>
-<span class="cd-key">  torch.export()</span> <span class="cd-arrow">→</span> <span class="cd-val">ONNX</span>
-                  <span class="cd-arrow">→</span> <span class="cd-val">coremltools</span>
-                  <span class="cd-arrow">→</span> <span class="cd-val">FaceParserModel.mlmodel</span>
-                  <span class="cd-arrow">→</span> <span class="cd-val">committed to Resources/</span>
-
-<span class="cd-comment">BeautyQA automated gate:</span>
-<span class="cd-key">  Script:</span> <span class="cd-val">Tools/BeautyQA/run_mask_qa_tests.sh</span>
-<span class="cd-key">  Args:</span>   <span class="cd-val">&lt;image_count&gt; &lt;simulator_dest&gt;</span>
-<span class="cd-key">  Action:</span>
-  <span class="cd-comment">1. Writes QA flag file</span>
-  <span class="cd-comment">2. Limits QA image count</span>
-  <span class="cd-comment">3. xcodebuild test → BeautyModelMaskQATests</span>
-  <span class="cd-comment">4. Stores .xcresult in /tmp</span>
-  <span class="cd-comment">5. Pass / Fail gate on pixel IoU thresholds</span></div>
-          </div>
-
-          <div class="info-block">
-            <h4>Key Engineering Decisions</h4>
-            <ul>
-              <li class="green"><strong>Zero third-party SDK dependencies</strong> in the app target. All frameworks are Apple-provided (Vision, Core ML, Metal, Core Image, StoreKit, PhotosUI, os.Logger). No CocoaPods, no SPM packages.</li>
-              <li class="green"><strong>Offline-first by design</strong> — all ML inference, rendering, and editing runs on-device. No network required for any core feature.</li>
-              <li class="amber"><strong>Custom model, not a cloud API</strong> — face parsing uses a local .mlmodel file trained with PyTorch. No Roboflow, no cloud vision API. This eliminates latency, cost, and data privacy concerns.</li>
-              <li class="pink"><strong>Manual dependency injection</strong> — AppDIContainer creates all services at launch. No third-party DI framework. Dependencies are explicit and traceable.</li>
-              <li><strong>Protocol-backed analytics and crash reporting</strong> — stubs behind protocols, ready to be replaced by live SDKs without touching feature code.</li>
-              <li><strong>FeatureFlag.swift controls premium gating</strong> — intentionally relaxed during testing; must be reviewed before any production release.</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="interview-tips">
-          <h4>Interview Talking Points</h4>
+      <div class="feature-grid">
+        <div class="feature-box">
+          <h4><svg viewBox="0 0 24 24"><path d="M12 2l10 20H2L12 2z" stroke="currentColor" fill="none" stroke-width="2"/></svg> Core Technical Feats</h4>
           <ul>
-            <li>"I trained the face segmentation model myself using PyTorch, then exported it to Core ML. No cloud vision API — everything runs on the user's device."</li>
-            <li>"The rendering pipeline chains Core Image filters with mask blending. For GPU-critical paths like iris recoloring and morphing, I use Metal shaders in an MTKView."</li>
-            <li>"I built an automated BeautyQA test runner that applies the Core ML model to curated QA images and checks pixel-level segmentation quality. This is a visual regression gate, not just a unit test."</li>
-            <li>"The app has zero third-party dependencies. Every framework is Apple-provided. This means zero supply chain risk, zero SDK update friction, and App Store compliance is never in question."</li>
-            <li>"Clean Architecture here isn't just a name. The Domain layer has zero knowledge of SwiftUI, Core Image, or StoreKit. You can test every use case without a simulator."</li>
+            <li><strong>Zero 3rd-Party SDKs:</strong> App target relies purely on Apple frameworks (Vision, CoreML, Metal). Zero supply chain risk.</li>
+            <li><strong>BeautyQA Visual Regression:</strong> Built a custom shell script + xcodebuild pipeline that runs the Core ML model on test images and asserts pixel-level IoU thresholds to catch visual regressions.</li>
+            <li><strong>Strict Clean Architecture:</strong> Domain layer is pure Swift value types. It knows nothing about SwiftUI, Core Image, or StoreKit.</li>
+          </ul>
+        </div>
+        <div class="interview-box">
+          <h4>Interview Highlights</h4>
+          <ul>
+            <li>I trained the semantic segmentation model myself in PyTorch rather than relying on a paid Cloud Vision API, achieving zero latency and complete data privacy.</li>
+            <li>The entire app functions completely offline. The only network calls are for StoreKit 2 subscription validation.</li>
+            <li>The Clean Architecture implementation uses manual Dependency Injection (`AppDIContainer`), avoiding bloated 3rd-party DI frameworks.</li>
           </ul>
         </div>
       </div>
     </article>
 
-    <!-- ════════════════════ 4. BLOCK BLAST ════════════════════ -->
-    <article class="project-card accent-purple">
-      <div class="pc-header">
-        <div class="pc-meta">
-          <div class="pc-title-row">
-            <h2>Block Blast</h2>
-            <span class="proj-tag pt-game">iOS Game</span>
-            <span class="proj-tag pt-ios">SpriteKit · SwiftUI</span>
-            <span class="loc-tag">~55,000 LOC</span>
-          </div>
-          <p class="pc-tagline">
-            Production iOS block puzzle game with a deterministic unidirectional state machine,
-            5 distinct game modes, a full meta-game economy (season pass, weekly leagues, collections,
-            achievements, power-ups), StoreKit 2 IAP, Game Center social features,
-            English/Turkish localisation, and a Fastlane + GitHub Actions CI/CD pipeline.
-          </p>
-          <div class="pc-badges">
-            <span class="badge b-blue">Swift</span><span class="badge b-blue">SwiftUI</span>
-            <span class="badge b-blue">SpriteKit</span><span class="badge b-blue">iOS 18.4</span>
-            <span class="badge b-purple">StoreKit 2</span><span class="badge b-purple">Game Center</span>
-            <span class="badge b-purple">Fastlane</span><span class="badge b-gray">GitHub Actions</span>
-            <span class="badge b-gray">Localization EN/TR</span>
-          </div>
-        </div>
-        <a class="gh-btn" href="https://github.com/coskunburak/blockblast" target="_blank">
-          <svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-          github.com/coskunburak/blockblast
-        </a>
-      </div>
-
-      <div class="pc-body">
-
-        <div class="code-block">
-          <div class="code-block-header"><h4>Unidirectional Data Flow + Architecture Layers</h4></div>
-          <div class="code-block-body"><span class="cd-comment">┌─────────────────────────────────────────────────────────────────────────────────┐</span>
-<span class="cd-comment">│                    BLOCK BLAST — STATE MACHINE ARCHITECTURE                     │</span>
-<span class="cd-comment">└─────────────────────────────────────────────────────────────────────────────────┘</span>
-
-<span class="cd-label">USER INTERACTION FLOW (pure, deterministic)</span>
-
-  GameScene (SpriteKit)       <span class="cd-comment">← renders board, handles touch input only</span>
-      <span class="cd-arrow">↓</span> GameAction (enum)
-  GameReducer.reduce(state:action:)
-      <span class="cd-comment">// Pure function — no side effects, no storage access</span>
-      <span class="cd-comment">// Input:  (GameState, GameAction)</span>
-      <span class="cd-comment">// Output: (GameState, [GameEvent])</span>
-      <span class="cd-arrow">↓</span>
-  GameEngine (wraps reducer)
-      <span class="cd-comment">// Orchestrates: reduce → auto-save → event dispatch</span>
-      <span class="cd-comment">// SaveGameStoreProtocol → KeyValueStore (UserDefaults)</span>
-      <span class="cd-comment">// JSON-encoded GameSaveDTO persisted atomically</span>
-      <span class="cd-arrow">↓</span>
-  GameViewModel (@Observable)
-      <span class="cd-comment">// Transforms GameState → ViewState for SwiftUI binding</span>
-      <span class="cd-comment">// Triggers analytics events from GameEvent stream</span>
-      <span class="cd-arrow">↓</span>
-  SwiftUI Views + SpriteKit (rendering only — no game logic)
-
-<span class="cd-label">NAVIGATION</span>
-  AppCoordinator
-      <span class="cd-comment">// Owns entire navigation stack via NavigationStack</span>
-      <span class="cd-comment">// State machine: Home → ModeSelect → Game → Results</span>
-      <span class="cd-comment">// Also: Store, SeasonPass, League, Collection, MetaLab, Settings</span>
-
-<span class="cd-label">DEPENDENCY INJECTION</span>
-  AppContainer  (manual DI root — no Swinject or similar)
-      <span class="cd-comment">// Creates all app-wide services at launch</span>
-      <span class="cd-comment">// Injects: StoreKit service, Analytics, GameCenter, AdManager</span>
-
-<span class="cd-label">GAME MODES</span>
-  Classic          <span class="cd-comment">— infinite, score-based, hardest difficulty ramp</span>
-  Daily Challenge  <span class="cd-comment">— server-seeded daily board, single attempt, global leaderboard</span>
-  Relic Run        <span class="cd-comment">— timed mode, collect relics while clearing board</span>
-  Daily Seed Race  <span class="cd-comment">— deterministic seed for fair comparison across players</span>
-  Creator Challenge <span class="cd-comment">— user-created / shared custom boards</span>
-
-<span class="cd-label">META-GAME ECONOMY</span>
-  SeasonPass    <span class="cd-comment">— tiered rewards, progression XP per game</span>
-  WeeklyLeague  <span class="cd-comment">— Game Center bracket, resets weekly</span>
-  Collections   <span class="cd-comment">— collectible album from gameplay drops</span>
-  Achievements  <span class="cd-comment">— Game Center + local achievement system</span>
-  PowerUps      <span class="cd-comment">— consumable purchases + ad-rewarded replenishment</span>
-
-<span class="cd-label">MONETISATION STACK</span>
-  StoreKit 2 IAP       <span class="cd-comment">— consumable power-ups, non-consumable premium features</span>
-  Rewarded Ads         <span class="cd-comment">— power-up replenishment, extra moves</span>
-  Interstitial Cadence <span class="cd-comment">— session-pacing with frequency caps</span>
-  Remote Config        <span class="cd-comment">— ad frequency, IAP display logic, feature gates</span>
-
-<span class="cd-label">CI / CD (Fastlane + GitHub Actions)</span>
-  Preflight scripts    <span class="cd-comment">— lint, typecheck, unit tests before any build</span>
-  Fastlane lanes       <span class="cd-comment">— beta distribution, App Store uploads</span>
-  GitHub Actions       <span class="cd-comment">— automated test matrix on every PR</span></div>
-        </div>
-
-        <div class="grid-2">
-          <div class="info-block">
-            <h4>Why GameReducer is Pure</h4>
-            <ul>
-              <li class="green">No storage access inside GameReducer. It receives state, returns new state + events. Side effects (save, analytics, ads) happen in GameEngine after the reduce call.</li>
-              <li class="green">This makes the entire game loop unit-testable without a device or simulator. You can test every rule, every edge case, every score calculation as a simple function call.</li>
-              <li class="green">Deterministic: same sequence of GameActions always produces the same GameState. Daily Seed Race depends on this for fairness.</li>
-              <li>SaveGameStoreProtocol is a protocol — the test suite injects a mock. UserDefaults is only used in production.</li>
-              <li>GameScene only renders. It calls <code>engine.dispatch(.placePiece(...))</code> and renders whatever GameState says. Zero game logic in the scene.</li>
-            </ul>
-          </div>
-          <div class="info-block">
-            <h4>Project Snapshot</h4>
-            <table class="kv-table">
-              <tr><td>Platform</td><td>iOS 18.4+</td></tr>
-              <tr><td>Bundle ID</td><td><code>burakcoskun.blockblast</code></td></tr>
-              <tr><td>UI Framework</td><td>SwiftUI + SpriteKit</td></tr>
-              <tr><td>State model</td><td>Reducer-driven, deterministic</td></tr>
-              <tr><td>Persistence</td><td>UserDefaults via KeyValueStore + JSON DTOs</td></tr>
-              <tr><td>Monetization</td><td>Rewarded ads · interstitial cadence · StoreKit 2 IAP</td></tr>
-              <tr><td>Social</td><td>Game Center leaderboards + friend challenges + weekly league</td></tr>
-              <tr><td>Localization</td><td>English + Turkish resource bundles</td></tr>
-              <tr><td>CI/CD</td><td>Fastlane + GitHub Actions</td></tr>
-              <tr><td>Feature flags</td><td>Runtime + remote monetization config</td></tr>
-            </table>
-          </div>
-        </div>
-
-        <div class="interview-tips">
-          <h4>Interview Talking Points</h4>
-          <ul>
-            <li>"GameReducer is a pure function — (GameState, GameAction) → (GameState, [GameEvent]). No side effects. I can unit test any game rule by calling the reducer directly."</li>
-            <li>"The monetization stack has three layers: StoreKit 2 IAP for purchases, rewarded ads for power-up replenishment, and remote config for ad frequency. These are decoupled — you can disable ads without touching IAP code."</li>
-            <li>"Daily Seed Race uses a server-provided deterministic seed so every player gets the exact same board. Fairness requires determinism — that's another reason the reducer must be pure."</li>
-            <li>"I set up Fastlane lanes and GitHub Actions CI. Every PR runs preflight scripts: lint, typecheck, unit tests. A failing preflight blocks the build pipeline."</li>
-            <li>"FeatureFlags control which game modes are live. Time Attack and Puzzle Levels exist in the codebase but are disabled. This lets me develop and test in production builds without user exposure."</li>
-          </ul>
-        </div>
-      </div>
-    </article>
-
-    <!-- ════════════════════ 5. SEYIR KIOSK ════════════════════ -->
-    <article class="project-card accent-cyan">
+    <!-- 4. SEYIR KIOSK -->
+    <article class="project-card c-cyan fade-in">
       <div class="pc-header">
         <div class="pc-meta">
           <div class="pc-title-row">
             <h2>Seyir Kiosk</h2>
-            <span class="proj-tag pt-prod">🟢 Live in Corporate Production</span>
-            <span class="proj-tag pt-android">Android Kiosk System</span>
-            <span class="loc-tag">~50,000 LOC</span>
+            <span class="proj-type">🟢 Live Enterprise Production</span>
           </div>
           <p class="pc-tagline">
-            Enterprise Android kiosk management system running on physical tablets in a live production environment.
-            A React Native TypeScript application locked into kiosk mode — overrides HOME button,
-            restricts system navigation, manages WebView content, launches external apps via native Intent bridge,
-            controls device state (display, audio), and supports remote configuration delivery without OTA app updates.
+            Android kiosk management system deployed on physical corporate tablets. A React Native app utilizing a custom Java Native Module to lock the OS, override system navigation, manage WebView bridges, and accept remote configurations.
           </p>
-          <div class="pc-badges">
-            <span class="badge b-cyan">TypeScript</span><span class="badge b-cyan">React Native</span>
-            <span class="badge b-amber">Android SDK 36</span><span class="badge b-amber">NDK 27.1</span>
-            <span class="badge b-amber">JDK 17</span><span class="badge b-amber">Gradle</span>
-            <span class="badge b-gray">ADB</span><span class="badge b-gray">WebView</span>
-            <span class="badge b-gray">patch-package</span><span class="badge b-purple">Remote Management</span>
+          <div class="badges">
+            <span class="badge b-cyan">React Native</span><span class="badge b-amber">Android SDK / NDK</span><span class="badge b-gray">DeviceAdminReceiver</span><span class="badge b-purple">Remote Config</span>
           </div>
         </div>
-        <a class="gh-btn" href="https://github.com/coskunburak/seyirkiosk" target="_blank">
-          <svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-          github.com/coskunburak/seyirkiosk
-        </a>
       </div>
 
-      <div class="pc-body">
-
-        <div class="code-block">
-          <div class="code-block-header"><h4>Kiosk System Architecture &amp; Deployment Pipeline</h4></div>
-          <div class="code-block-body"><span class="cd-comment">┌───────────────────────────────────────────────────────────────────────────────────┐</span>
-<span class="cd-comment">│                SEYIR KIOSK — ENTERPRISE ANDROID KIOSK SYSTEM                     │</span>
-<span class="cd-comment">└───────────────────────────────────────────────────────────────────────────────────┘</span>
-
-<span class="cd-label">PHYSICAL DEPLOYMENT (Corporate Environment — Live)</span>
-<span class="cd-comment">┌────────────────────────────────────────────────────────────────────────────────┐</span>
-<span class="cd-comment">│   Android Tablet Fleet (physical devices)                                      │</span>
-<span class="cd-comment">│                                                                                │</span>
-<span class="cd-comment">│  ┌──────────────────────────────────────────────────────────────────────────┐  │</span>
-<span class="cd-comment">│  │   React Native TypeScript App (Kiosk Lock-Down Layer)                   │  │</span>
-<span class="cd-comment">│  │                                                                          │  │</span>
-<span class="cd-comment">│  │   Android Task Pinning (Screen Pinning API)                              │  │</span>
-<span class="cd-comment">│  │   ├── startLockTask() → device in kiosk mode                            │  │</span>
-<span class="cd-comment">│  │   ├── HOME button → overridden via DeviceAdminReceiver                  │  │</span>
-<span class="cd-comment">│  │   ├── BACK button → suppressed at Activity level                        │  │</span>
-<span class="cd-comment">│  │   └── Status bar / notification drawer → fully disabled                 │  │</span>
-<span class="cd-comment">│  │                                                                          │  │</span>
-<span class="cd-comment">│  │   Content Management                                                     │  │</span>
-<span class="cd-comment">│  │   ├── WebView (React Native WebView bridge)                              │  │</span>
-<span class="cd-comment">│  │   │   Custom JS→Native bridge for device state control                  │  │</span>
-<span class="cd-comment">│  │   │   postMessage API for bidirectional web↔native comms                │  │</span>
-<span class="cd-comment">│  │   ├── External App Launcher                                              │  │</span>
-<span class="cd-comment">│  │   │   Native module → Android Intent → launch installed apps            │  │</span>
-<span class="cd-comment">│  │   │   Returns focus to kiosk on external app close                      │  │</span>
-<span class="cd-comment">│  │   └── Device State Control (Native Module bridge)                       │  │</span>
-<span class="cd-comment">│  │       brightness · wake locks · volume · display on/off                 │  │</span>
-<span class="cd-comment">│  │                                                                          │  │</span>
-<span class="cd-comment">│  │   Remote Management                                                      │  │</span>
-<span class="cd-comment">│  │   ├── Remote config polling (no app update required)                    │  │</span>
-<span class="cd-comment">│  │   └── Content URL refresh, layout changes, feature toggles              │  │</span>
-<span class="cd-comment">│  └──────────────────────────────────────────────────────────────────────────┘  │</span>
-<span class="cd-comment">└────────────────────────────────────────────────────────────────────────────────┘</span>
-
-<span class="cd-label">BUILD &amp; DEPLOYMENT PIPELINE</span>
-
-  <span class="cd-comment">1. Developer machine</span>
-     <span class="cd-arrow">npm ci</span>                  <span class="cd-comment">← deterministic install (CI-safe)</span>
-     <span class="cd-comment">postinstall → patch-package applies React Native native patches</span>
-
-  <span class="cd-comment">2. Metro Bundler</span>
-     <span class="cd-arrow">npm start</span>               <span class="cd-comment">← Metro dev server</span>
-     <span class="cd-arrow">adb reverse tcp:8081</span>    <span class="cd-comment">← port forward to physical device</span>
-
-  <span class="cd-comment">3. Development Build</span>
-     <span class="cd-arrow">npm run android</span>         <span class="cd-comment">← builds + installs debug APK via ADB</span>
-
-  <span class="cd-comment">4. Production APK</span>
-     <span class="cd-arrow">cd android</span>
-     <span class="cd-arrow">./gradlew assembleRelease</span>
-     <span class="cd-comment">APK → android/app/build/outputs/apk/release/</span>
-
-  <span class="cd-comment">5. Device Deployment</span>
-     <span class="cd-arrow">adb -s &lt;device-serial&gt; install -r app-release.apk</span>
-
-<span class="cd-label">ANDROID TOOLCHAIN</span>
-  <span class="cd-key">Android SDK Platform:</span> <span class="cd-val">36</span>
-  <span class="cd-key">SDK Build Tools:</span>      <span class="cd-val">36.0.0</span>
-  <span class="cd-key">Android NDK:</span>          <span class="cd-val">27.1.12297006</span>
-  <span class="cd-key">JDK:</span>                  <span class="cd-val">17 (Android Studio bundled)</span>
-  <span class="cd-key">ADB:</span>                  <span class="cd-val">Platform Tools</span></div>
-        </div>
-
-        <div class="grid-2">
-          <div class="info-block">
-            <h4>Key Technical Challenges Solved</h4>
-            <ul>
-              <li class="green"><strong>Device Admin + Task Pinning</strong> — implementing kiosk lock-down in React Native requires a Java native module that calls <code>startLockTask()</code> and registers a <code>DeviceAdminReceiver</code>. Cannot be done from JS alone.</li>
-              <li class="green"><strong>HOME button override</strong> — standard Android HOME always exits any app. Kiosk mode requires Device Admin privileges to block the HOME intent and prevent system launcher from activating.</li>
-              <li class="amber"><strong>WebView ↔ Native bridge</strong> — custom JS interface allows web content to invoke native device functions (set brightness, wake screen, launch external app) via postMessage protocol.</li>
-              <li class="amber"><strong>External app return</strong> — launching a third-party app via Intent and ensuring kiosk regains focus when user closes it requires ActivityLifecycleCallbacks monitoring.</li>
-              <li><strong>patch-package reproducibility</strong> — React Native native module patches are committed as .patch files. <code>npm ci</code> + postinstall guarantees every build has identical native code regardless of machine.</li>
-            </ul>
-          </div>
-          <div class="info-block">
-            <h4>Production Evidence</h4>
-            <ul>
-              <li class="green"><strong>🟢 Deployed and running live</strong> in a corporate production environment on physical Android tablet hardware.</li>
-              <li class="green">Device fleet managed via ADB for deployment — tablets are enrolled in a managed deployment pipeline.</li>
-              <li>Remote config allows content and layout changes without pushing a new APK to physical devices.</li>
-              <li>Kiosk lock-down is permanent during operation hours — devices cannot be unlocked by end users.</li>
-              <li>This is not a proof-of-concept — real users interact with this system daily in a corporate setting.</li>
-            </ul>
-            <h4 style="margin-top: 12px;">Why React Native for an Android Kiosk?</h4>
-            <ul>
-              <li>React Native gives cross-platform UI with <strong>native module escape hatches</strong> for Android-specific APIs (Device Admin, Intent system, wake locks).</li>
-              <li>WebView integration is first-class — no need to build a custom WebView bridge from scratch.</li>
-              <li>TypeScript ensures type safety across the entire JS layer while native modules handle OS-level operations.</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="interview-tips">
-          <h4>Interview Talking Points</h4>
+      <div class="feature-grid" style="margin-top: 20px;">
+        <div class="feature-box">
+          <h4><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zM12 6v6l4 2" stroke="currentColor" fill="none" stroke-width="2"/></svg> Kiosk Lock-Down Mechanisms</h4>
           <ul>
-            <li>"This is in production. Real users in a corporate environment interact with it every day on physical Android tablets."</li>
-            <li>"Implementing true kiosk mode in React Native is non-trivial. It requires writing a Java native module that registers a DeviceAdminReceiver and calls startLockTask(). You can't do that from JavaScript."</li>
-            <li>"I built a JS-to-native bridge so web content running inside WebView can control device hardware — brightness, wake state, volume, external app launch. This is a custom postMessage protocol with a typed native module on the receiving end."</li>
-            <li>"patch-package is critical for reproducibility. If you have React Native native module patches that aren't committed as .patch files, your build will silently break on a fresh clone. I use npm ci + postinstall to guarantee identical native code on every machine."</li>
-            <li>"Remote config means I can change what the kiosk displays or how it behaves without pushing a new APK to the fleet. This is important when you have physical tablets you can't easily access."</li>
+            <li><strong>Device Admin API:</strong> React Native cannot lock an Android device alone. I wrote a Java Native Module that registers a `DeviceAdminReceiver` and calls `startLockTask()`.</li>
+            <li><strong>System Overrides:</strong> Suppresses the BACK button at the Activity level and blocks the HOME intent entirely to prevent users from reaching the Android launcher.</li>
+            <li><strong>JS ↔ Native Bridge:</strong> A custom `postMessage` WebView bridge allows the loaded web application to securely command the native Android hardware (brightness, volume, wake locks).</li>
+          </ul>
+        </div>
+        <div class="interview-box">
+          <h4>Interview Highlights</h4>
+          <ul>
+            <li>This isn't a prototype; it's currently live in a corporate environment managing physical tablet fleets.</li>
+            <li>I implemented `patch-package` combined with `npm ci` to ensure custom native module patches are 100% reproducible across CI/CD and developer machines.</li>
+            <li>The system architecture heavily leverages remote configuration, allowing UI/UX updates to the fleet without requiring physical ADB access or APK reinstalls.</li>
           </ul>
         </div>
       </div>
     </article>
 
-    <!-- ════════════════════ 6. FITGEN AI + TABKNOCKOUT ════════════════════ -->
-    <article class="project-card accent-green">
+    <!-- 5. BLOCK BLAST -->
+    <article class="project-card c-purple fade-in">
       <div class="pc-header">
         <div class="pc-meta">
           <div class="pc-title-row">
-            <h2>FitGen AI &nbsp;·&nbsp; TabKnockout</h2>
-            <span class="proj-tag pt-flutter">Flutter / AI-Powered</span>
-            <span class="proj-tag pt-game">C# Game</span>
-            <span class="loc-tag">~50,000 LOC combined</span>
+            <h2>Block Blast</h2>
+            <span class="proj-type">Game State Engineering</span>
           </div>
           <p class="pc-tagline">
-            <strong>FitGen AI</strong> — Flutter fitness application with Gemini-powered workout plan generation,
-            Firebase backend (Auth, Firestore, Cloud Functions, Crashlytics), Bloc state management,
-            and analytics-safe telemetry. Provider credentials never shipped in app binary.
-            <strong>TabKnockout</strong> — C# game demonstrating cross-platform game engineering.
+            iOS block puzzle game with 5 modes, meta-game economy, and StoreKit monetization. Architected around a pure, deterministic unidirectional state reducer, allowing full unit-testability of the game loop independent of the rendering engine.
           </p>
-          <div class="pc-badges">
-            <span class="badge b-green">Flutter</span><span class="badge b-green">Dart ^3.8.0</span>
-            <span class="badge b-green">Bloc</span><span class="badge b-green">GetIt</span>
-            <span class="badge b-purple">Firebase Auth</span><span class="badge b-purple">Firestore</span>
-            <span class="badge b-purple">Cloud Functions</span><span class="badge b-purple">Crashlytics</span>
-            <span class="badge b-pink">Gemini API</span><span class="badge b-gray">Amplitude</span>
-            <span class="badge b-red">C# (TabKnockout)</span>
+          <div class="badges">
+            <span class="badge b-blue">SwiftUI / SpriteKit</span><span class="badge b-purple">Unidirectional State</span><span class="badge b-purple">Game Center</span><span class="badge b-gray">Fastlane CI/CD</span>
           </div>
-        </div>
-        <div class="gh-btns">
-          <a class="gh-btn" href="https://github.com/coskunburak/fitgen-ai" target="_blank">
-            <svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-            FitGen AI
-          </a>
-          <a class="gh-btn" href="https://github.com/coskunburak/tabknockout" target="_blank">
-            <svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-            TabKnockout
-          </a>
         </div>
       </div>
 
-      <div class="pc-body">
-        <div class="code-block">
-          <div class="code-block-header"><h4>FitGen AI — Architecture &amp; Secret Management</h4></div>
-          <div class="code-block-body"><span class="cd-label">ARCHITECTURE (Layered / Clean)</span>
-
-<span class="cd-comment">Presentation Layer  (Flutter UI)</span>
-  <span class="cd-key">BlocProvider</span> <span class="cd-arrow">→</span> <span class="cd-val">WorkoutBloc / NutritionBloc / ProfileBloc</span>
-  <span class="cd-comment">Bloc emits States → BlocBuilder rebuilds widgets deterministically</span>
-  <span class="cd-comment">equatable States → no spurious rebuilds</span>
-
-<span class="cd-comment">Domain Layer</span>
-  <span class="cd-comment">UseCases: GenerateWorkoutPlan · LogMeal · GetDailyNutrition · FetchActiveWorkout</span>
-  <span class="cd-comment">Repositories (abstract) — implemented in Data layer</span>
-
-<span class="cd-comment">Data Layer</span>
-  <span class="cd-key">WorkoutRepository</span> <span class="cd-arrow">→</span> <span class="cd-val">Firestore (user workout plans, sessions)</span>
-  <span class="cd-key">NutritionRepository</span> <span class="cd-arrow">→</span> <span class="cd-val">Firestore (daily logs) + FatSecret via Firebase Functions</span>
-  <span class="cd-key">AuthRepository</span> <span class="cd-arrow">→</span> <span class="cd-val">Firebase Auth (email + Google Sign-In)</span>
-
-<span class="cd-comment">DI: GetIt service locator — registered at app bootstrap, injected into BLoCs</span>
-
-<span class="cd-label">AI INTEGRATION — GEMINI</span>
-
-  <span class="cd-comment">● Workout plan generation runs through Gemini (google_generative_ai package)</span>
-  <span class="cd-comment">● API key provided at runtime via --dart-define (NEVER compiled into binary)</span>
-  <span class="cd-comment">● Structured prompt: user goals + health context + equipment + training prefs</span>
-  <span class="cd-comment">  → Gemini returns structured JSON workout plan</span>
-  <span class="cd-comment">  → Parsed by WorkoutPlanParser → domain WorkoutPlan entity</span>
-  <span class="cd-comment">  → Saved to Firestore under user's document</span>
-
-<span class="cd-label">FIREBASE FUNCTIONS AS SECURE PROXY</span>
-
-  <span class="cd-comment">● Nutrition search uses FatSecret API (provider credentials NEVER in app)</span>
-  <span class="cd-comment">● Mobile calls:  Firebase Functions endpoint (authenticated)</span>
-  <span class="cd-comment">● Function calls: FatSecret REST API server-side, returns result to mobile</span>
-  <span class="cd-comment">● This pattern ensures: no API key in APK/IPA, no key rotation risk in client</span>
-
-<span class="cd-label">SECRET MANAGEMENT</span>
-
-  <span class="cd-comment">env/dev.example.json    ← committed (template, no real values)</span>
-  <span class="cd-comment">env/dev.local.json      ← git-ignored (real Firebase, Gemini, Amplitude keys)</span>
-
-  <span class="cd-arrow">flutter run --dart-define-from-file=env/dev.local.json</span>
-  <span class="cd-comment">Values injected at compile time → accessible via String.fromEnvironment()</span>
-  <span class="cd-comment">NOT embedded as plain strings in the binary — require known compile-time names</span>
-
-<span class="cd-label">ANALYTICS — AMPLITUDE</span>
-  <span class="cd-comment">● Analytics calls wrapped in try/catch with guarded runtime handling</span>
-  <span class="cd-comment">● Analytics failure NEVER blocks UI or user flow</span>
-  <span class="cd-comment">● Crashlytics only active in release builds (not debug)</span>
-  <span class="cd-comment">● Both services behind protocol abstractions — swappable without feature changes</span>
-
-<span class="cd-label">ONBOARDING FLOW</span>
-  <span class="cd-comment">Step 1: Goals (weight loss / muscle gain / endurance / flexibility)</span>
-  <span class="cd-comment">Step 2: Health context (age, weight, height, fitness level)</span>
-  <span class="cd-comment">Step 3: Equipment (gym / home / no equipment)</span>
-  <span class="cd-comment">Step 4: Training preferences (days/week, session duration, preferred days)</span>
-  <span class="cd-comment">→ All data feeds the Gemini prompt context for personalised plan generation</span></div>
-        </div>
-
-        <div class="interview-tips">
-          <h4>Interview Talking Points</h4>
+      <div class="feature-grid" style="margin-top: 20px;">
+        <div class="feature-box">
+          <h4><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4zM4 12h16M12 4v16" stroke="currentColor" fill="none" stroke-width="2"/></svg> Architecture & Determinism</h4>
           <ul>
-            <li>"Provider credentials — Firebase config, Gemini API key, Amplitude — never enter the repository. I use --dart-define-from-file to inject them at compile time from a git-ignored local JSON file."</li>
-            <li>"Nutrition search goes through Firebase Functions as a secure proxy. The FatSecret credentials live on the server. If I need to rotate the key, I redeploy the function — no app update required."</li>
-            <li>"Analytics failures never block the UI. Every Amplitude call is wrapped in guarded error handling. If the analytics SDK crashes, the user's workout plan generation still works."</li>
-            <li>"Bloc + equatable means UI rebuilds only when state actually changes. I don't get spurious repaints from reference equality."</li>
-            <li>"The onboarding data flows directly into the Gemini prompt as structured context. The prompt is parameterised — user profile fills the template, Gemini returns structured JSON that maps to a domain entity."</li>
+            <li><strong>Pure Reducer:</strong> `GameReducer.reduce(state: action)` has zero side effects and touches no storage. It takes a state, applies an action, and returns a new state.</li>
+            <li><strong>UI Decoupling:</strong> The `GameScene` (SpriteKit) only registers touches and renders the state output. Zero game rules exist in the view layer.</li>
+            <li><strong>Fairness via Seeds:</strong> The "Daily Seed Race" mode relies on the reducer's absolute determinism. A server-provided seed ensures identical RNG across all devices globally.</li>
+          </ul>
+        </div>
+        <div class="interview-box">
+          <h4>Interview Highlights</h4>
+          <ul>
+            <li>Because the core loop is a pure function, I can unit test complex multi-turn logic instantly without spinning up a simulator or mocking UI components.</li>
+            <li>I built a complete automated pipeline using Fastlane and GitHub Actions that runs preflight linters and unit tests before any beta build is allowed.</li>
+            <li>The monetization stack (Ads + IAP) is controlled via remote config feature flags, entirely decoupled from the core game state.</li>
           </ul>
         </div>
       </div>
     </article>
 
-  </div><!-- /projects -->
-</div>
-
-<hr class="divider" />
-
-<!-- ═══════════════════════ SUPPORTING PROJECTS ═══════════════════════ -->
-<div class="container">
-  <div class="section-header">
-    <h2>Additional Projects</h2>
-    <p>Further breadth across platforms, patterns, and problem domains.</p>
-  </div>
-  <div class="support-grid">
-    <div class="support-card">
-      <h3>mental-math-trainer</h3>
-      <p>React Native / Expo / TypeScript with full production engineering workflow: ErrorBoundary, LocalizationProvider, ThemeProvider, bootstrapApp(), Jest, ESLint, Prettier, Husky, lint-staged, and CI-ready scripts.</p>
-      <div class="badges" style="margin-top:6px;">
-        <span class="badge b-cyan">React Native</span><span class="badge b-cyan">TypeScript</span><span class="badge b-gray">Expo</span><span class="badge b-gray">Jest</span>
-      </div>
-      <a class="support-link" href="https://github.com/coskunburak/mental-math-trainer" target="_blank">→ github.com/coskunburak/mental-math-trainer</a>
-    </div>
-    <div class="support-card">
-      <h3>colorblockjam</h3>
-      <p>TypeScript browser-based block puzzle game. Demonstrates game state management, rendering loop design, and interactive user input handling outside a native framework.</p>
-      <div class="badges" style="margin-top:6px;">
-        <span class="badge b-cyan">TypeScript</span><span class="badge b-purple">Game Logic</span>
-      </div>
-      <a class="support-link" href="https://github.com/coskunburak/colorblockjam" target="_blank">→ github.com/coskunburak/colorblockjam</a>
-    </div>
-    <div class="support-card">
-      <h3>ekomobil Stack</h3>
-      <p>Full-stack Flutter + backend: BLoC, Hydrated BLoC, Dio, GoRouter, GetIt, Freezed, json_serializable, flutter_map, geolocator, secure_storage, permission_handler, Pretty Dio Logger, bloc_concurrency. Separate backend repo.</p>
-      <div class="badges" style="margin-top:6px;">
-        <span class="badge b-green">Flutter</span><span class="badge b-green">BLoC</span><span class="badge b-amber">REST API</span><span class="badge b-gray">Maps</span>
-      </div>
-    </div>
-    <div class="support-card">
-      <h3>VehicleTracking</h3>
-      <p>Flutter location-based business app: Google Maps, Firebase Auth/Firestore/Messaging/Storage, Syncfusion gauge dashboard, PDF/printing export, BLoC, Dio, equatable. Real-world fleet tracking scenario.</p>
-      <div class="badges" style="margin-top:6px;">
-        <span class="badge b-green">Flutter</span><span class="badge b-purple">Firebase</span><span class="badge b-gray">Google Maps</span><span class="badge b-gray">PDF</span>
-      </div>
-    </div>
-    <div class="support-card">
-      <h3>macro-coach</h3>
-      <p>SwiftUI + Firebase iOS nutrition and coaching app. Auth, onboarding, food logging, dashboard, coaching flows, progress tracking. Second native iOS proof point alongside GlowStudio AI and Block Blast.</p>
-      <div class="badges" style="margin-top:6px;">
-        <span class="badge b-blue">SwiftUI</span><span class="badge b-purple">Firebase</span><span class="badge b-gray">iOS</span>
-      </div>
-    </div>
-    <div class="support-card">
-      <h3>mobilodev — Focus Tracker</h3>
-      <p>Expo / React Native MVP. Focus session timer, AppState-based distraction detection, AsyncStorage offline storage, bar/pie chart analytics (react-native-chart-kit), Firebase Auth, React Navigation bottom tabs, React Context.</p>
-      <div class="badges" style="margin-top:6px;">
-        <span class="badge b-cyan">React Native</span><span class="badge b-gray">Expo</span><span class="badge b-purple">Firebase</span>
-      </div>
-    </div>
   </div>
 </div>
-
-<hr class="divider" />
 
 <!-- ═══════════════════════ TECH MATRIX ═══════════════════════ -->
-<div class="container">
-  <div class="section-header">
-    <h2>Technical Expertise Matrix</h2>
-    <p>Full-stack coverage across the mobile product lifecycle — each row backed by a shipped project.</p>
+<div class="container fade-in">
+  <div class="section-header" style="padding-top: 20px;">
+    <h2>Expertise Matrix</h2>
   </div>
   <table class="matrix-table">
     <thead>
-      <tr><th>Domain</th><th>Technologies &amp; Tools</th><th>Demonstrated In</th></tr>
+      <tr><th>Domain</th><th>Technologies & Ecosystems</th></tr>
     </thead>
     <tbody>
       <tr>
-        <td><strong>Native iOS</strong></td>
-        <td>Swift, SwiftUI, UIKit, SpriteKit, Combine, Swift Concurrency, SwiftData, async/await, actors</td>
-        <td>GlowStudio AI, Block Blast, Verified AI iOS client, macro-coach</td>
+        <td><strong>Apple Native</strong></td>
+        <td>Swift, SwiftUI, UIKit, SpriteKit, Core ML, Metal, Vision, StoreKit 2, SwiftData, Instruments</td>
       </tr>
       <tr>
-        <td><strong>iOS System Frameworks</strong></td>
-        <td>Core ML, Metal, Vision, Core Image, PhotosUI, StoreKit 2, Keychain Services, Sign in with Apple, os.Logger, MTKView, AVFoundation</td>
-        <td>GlowStudio AI (full ML + GPU stack) · Block Blast (StoreKit 2 + Game Center)</td>
+        <td><strong>Cross-Platform</strong></td>
+        <td>React Native, Expo, TypeScript, Flutter, Dart, Bloc, Redux/State Management</td>
       </tr>
       <tr>
-        <td><strong>React Native</strong></td>
-        <td>TypeScript, Expo Dev Client, React Navigation, WebView, native modules (Java/Kotlin bridge), patch-package, AsyncStorage, AppState</td>
-        <td>MocapExpo (mobile client) · Seyir Kiosk (production kiosk) · mental-math-trainer · mobilodev</td>
+        <td><strong>Backend (JVM)</strong></td>
+        <td>Java 21, Spring Boot 3, Modular Monoliths, Spring Security, Domain-Driven Design (DDD)</td>
       </tr>
       <tr>
-        <td><strong>Flutter / Dart</strong></td>
-        <td>Bloc, Hydrated Bloc, bloc_concurrency, GetIt, GoRouter, Dio, Freezed, json_serializable, Equatable, flutter_map, geolocator, secure_storage</td>
-        <td>FitGen AI · ekomobil · VehicleTracking · macro-coach</td>
+        <td><strong>Backend (Node/Py)</strong></td>
+        <td>Node.js, Fastify, Python, FastAPI, SymPy, PostgreSQL, Redis, Zod, OpenAPI</td>
       </tr>
       <tr>
-        <td><strong>Backend — JVM</strong></td>
-        <td>Java 21, Spring Boot 3, Modular Monolith, Domain-Driven Design, OpenAPI 3, JWT, rate limiting, PostgreSQL, Redis, structured logging, Spring Security</td>
-        <td>Verified AI (full production backend with 4 ADRs and 45+ technical docs)</td>
+        <td><strong>AI / ML</strong></td>
+        <td>PyTorch, Core ML (On-Device), WHAM/SMPL (Server GPU), Gemini/GPT (Provider-neutral routing)</td>
       </tr>
       <tr>
-        <td><strong>Backend — Node.js</strong></td>
-        <td>TypeScript, Fastify, Zod schema validation, Knex/Drizzle ORM, PostgreSQL typed repos, S3 signed URLs, job dispatch, Docker Compose local stack</td>
-        <td>MocapExpo backend API</td>
+        <td><strong>Infra & DevOps</strong></td>
+        <td>RunPod Serverless, AWS S3/MinIO, Docker, Firebase, Fastlane, GitHub Actions, Android ADB</td>
       </tr>
       <tr>
-        <td><strong>AI / ML — On-Device</strong></td>
-        <td>Core ML inference, PyTorch model training, coremltools model export, ONNX intermediate, MTLComputePipelineState, custom Metal shaders for AI-augmented rendering</td>
-        <td>GlowStudio AI (custom face parsing model — trained, exported, deployed on-device)</td>
-      </tr>
-      <tr>
-        <td><strong>AI / ML — Server-Side</strong></td>
-        <td>WHAM / SMPL pose estimation, Python PyTorch worker, FastAPI, SymPy deterministic math verification, provider-neutral LLM routing (Gemini / GPT-4o), structured prompt versioning, DLT triangulation</td>
-        <td>MocapExpo (WHAM worker) · Verified AI (SymPy verifier) · FitGen AI (Gemini)</td>
-      </tr>
-      <tr>
-        <td><strong>Infrastructure &amp; DevOps</strong></td>
-        <td>RunPod Serverless (GPU compute), S3 / MinIO object storage, Docker, Firebase (Auth/Firestore/Functions/Crashlytics/Messaging), Fastlane, GitHub Actions CI, ADB deployment</td>
-        <td>MocapExpo (RunPod + S3) · Block Blast (Fastlane CI/CD) · FitGen AI (Firebase) · Seyir Kiosk (ADB)</td>
-      </tr>
-      <tr>
-        <td><strong>Android / System</strong></td>
-        <td>Android SDK 36, NDK 27, Gradle build system, ADB, DeviceAdminReceiver, Task Pinning API, Android Intent system, native module bridge, React Native Java modules</td>
-        <td>Seyir Kiosk (live production Android kiosk deployment)</td>
-      </tr>
-      <tr>
-        <td><strong>Architecture Patterns</strong></td>
-        <td>Clean Architecture, Unidirectional Data Flow, Modular Monolith, Domain-Driven Design, Ports &amp; Adapters (Hexagonal), ADR-driven design, Provider-Neutral patterns</td>
-        <td>All featured projects — each has explicit, documented architecture boundaries</td>
-      </tr>
-      <tr>
-        <td><strong>Security</strong></td>
-        <td>Keychain Services, Sign in with Apple, --dart-define secret injection, .env isolation, signed S3 URLs, server-authoritative entitlement, no secrets in version control</td>
-        <td>Consistent policy across all projects</td>
-      </tr>
-      <tr>
-        <td><strong>Testing &amp; Quality</strong></td>
-        <td>XCTest unit + snapshot tests, BeautyQA automated visual regression (custom shell runner + xcodebuild), SymPy property-based math tests, Jest, ESLint, Prettier, Husky, Fastlane preflight scripts, Crashlytics</td>
-        <td>GlowStudio AI (BeautyQA) · Verified AI (SymPy tests + RTM) · Block Blast (preflight CI) · mental-math-trainer (Jest)</td>
-      </tr>
-      <tr>
-        <td><strong>Technical Writing</strong></td>
-        <td>45+ canonical docs (product, domain, architecture, iOS, backend, data, AI, security, ops, quality, roadmap), 4 formal ADRs, requirement traceability matrix, runbooks, threat model</td>
-        <td>Verified AI documentation suite — optimized for engineers, AI agents (NotebookLM, Codex), and future maintainers</td>
+        <td><strong>Testing</strong></td>
+        <td>XCTest, Jest, Visual Regression Automation (BeautyQA), Property-based testing</td>
       </tr>
     </tbody>
   </table>
 </div>
 
-<hr class="divider" />
-
-<!-- ═══════════════════════ ENGINEERING PRINCIPLES ═══════════════════════ -->
-<div class="container">
-  <div class="section-header">
-    <h2>Engineering Principles</h2>
-    <p>Applied consistently across all projects — not just stated, but demonstrated.</p>
-  </div>
-  <div class="principles">
-    <div class="principle">
-      <div class="p-num">01 — Layering</div>
-      <h3>Explicit, Enforced Layer Boundaries</h3>
-      <p>Domain layers have zero knowledge of Data, Engine, or UI. Dependency directions are one-way. In GlowStudio AI and Verified AI, this is enforced at compile time through module visibility — Domain code cannot import a concrete repository class.</p>
-    </div>
-    <div class="principle">
-      <div class="p-num">02 — AI Trust</div>
-      <h3>AI Output is Untrusted Input</h3>
-      <p>AI-generated content is always treated as untrusted data requiring independent verification. Verified AI cross-checks every AI math solution with SymPy. AI provider adapters are isolated behind ports — no business logic depends on a specific model or provider.</p>
-    </div>
-    <div class="principle">
-      <div class="p-num">03 — Determinism</div>
-      <h3>Deterministic, Testable State</h3>
-      <p>Pure reducers and state machines produce the same output for the same input, always. Block Blast's GameReducer, Verified AI's domain invariants, and FitGen's Bloc states are all deterministic. This is what makes complex systems testable at scale.</p>
-    </div>
-    <div class="principle">
-      <div class="p-num">04 — Honesty</div>
-      <h3>No Fake Success</h3>
-      <p>Systems must report honest failure states with explicit reason codes. MocapExpo never produces a BVH artifact from a failed dual-camera solve — missing_calibration, missing_sync, and primaryCameraFallbackUsed are always truthful and always visible.</p>
-    </div>
-    <div class="principle">
-      <div class="p-num">05 — Security</div>
-      <h3>Secrets Never in Source</h3>
-      <p>API keys, credentials, and licensed model assets never enter version control. --dart-define, .env files, password managers, and S3 signed URLs enforce this consistently across every project in this portfolio.</p>
-    </div>
-    <div class="principle">
-      <div class="p-num">06 — Documentation</div>
-      <h3>Architecture Decisions are Written Down</h3>
-      <p>Verified AI carries 45+ canonical documentation files and 4 formal ADRs. Why PostgreSQL over Firestore, why modular monolith over microservices — these decisions are documented with rationale so future maintainers don't repeat them from scratch.</p>
-    </div>
-    <div class="principle">
-      <div class="p-num">07 — Offline First</div>
-      <h3>Device-Local When Appropriate</h3>
-      <p>GlowStudio AI runs all ML inference on-device — zero network dependency for core features. Seyir Kiosk operates on managed hardware without cloud dependency for basic kiosk function. Users shouldn't pay for uptime you don't control.</p>
-    </div>
-    <div class="principle">
-      <div class="p-num">08 — Minimal Surface</div>
-      <h3>Minimal External Dependencies</h3>
-      <p>GlowStudio AI has zero third-party SDK dependencies in its app target. Verified AI's iOS app communicates only with the Spring Boot API. External dependencies are evaluated for necessity, not convenience — every third party is a future maintenance obligation.</p>
-    </div>
-    <div class="principle">
-      <div class="p-num">09 — Observability</div>
-      <h3>Structured Quality Metrics &amp; Audit Trails</h3>
-      <p>Systems produce structured quality reports, typed analytics, and explicit status fields. MocapExpo's 11-field quality_report_json, GlowStudio's BeautyQA pixel IoU gates, and Block Blast's Fastlane preflight scripts all create observable, auditable quality signals.</p>
-    </div>
-  </div>
-</div>
-
 <!-- ═══════════════════════ FOOTER ═══════════════════════ -->
-<div class="container">
-  <footer class="footer">
+<div class="container fade-in">
+  <footer class="stack-section" style="margin-top: 60px; border-bottom: none; display: flex; justify-content: space-between; align-items: center;">
     <div>
-      <p style="font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:3px;">Burak Coşkun</p>
-      <p>iOS &amp; Mobile Platform Engineer · Sakarya University CS (2026) · İstanbul, Turkey</p>
+      <h3 style="margin-bottom: 4px;">Burak Coşkun</h3>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">iOS & Mobile Platform Engineer</p>
     </div>
-    <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:center;">
-      <a href="https://github.com/coskunburak" target="_blank" style="font-size:.82rem;color:var(--text3);">github.com/coskunburak</a>
-      <a href="https://www.linkedin.com/in/csknburak/" target="_blank" style="font-size:.82rem;color:var(--text3);">linkedin.com/in/csknburak</a>
-      <p style="font-size:.82rem;color:var(--text3);">September 2026</p>
+    <div style="display: flex; gap: 16px;">
+      <a href="https://github.com/coskunburak" target="_blank">GitHub</a>
+      <a href="https://www.linkedin.com/in/csknburak/" target="_blank">LinkedIn</a>
     </div>
   </footer>
 </div>
+
+<script>
+  // Simple Intersection Observer for scroll fade-in animations
+  document.addEventListener("DOMContentLoaded", () => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    
+    // Trigger initial check
+    setTimeout(() => {
+      document.querySelectorAll('.fade-in').forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if(rect.top < window.innerHeight) el.classList.add('visible');
+      });
+    }, 100);
+  });
+</script>
 
 </body>
 </html>

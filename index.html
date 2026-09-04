@@ -277,12 +277,12 @@
 
   <!-- METRICS -->
   <div class="metrics fade-in">
-    <div class="metric"><div class="num">6</div><div class="label">Production Systems</div></div>
+    <div class="metric"><div class="num">10</div><div class="label">Production Systems</div></div>
     <div class="metric"><div class="num">71+</div><div class="label">Technical Documents</div></div>
     <div class="metric"><div class="num">7</div><div class="label">Architecture Decision Records</div></div>
-    <div class="metric"><div class="num">16+</div><div class="label">Database Migrations</div></div>
+    <div class="metric"><div class="num">100+</div><div class="label">Unit Test Files</div></div>
+    <div class="metric"><div class="num">5</div><div class="label">Languages &amp; Runtimes</div></div>
     <div class="metric"><div class="num">14</div><div class="label">Native Kotlin Modules</div></div>
-    <div class="metric"><div class="num">7</div><div class="label">CI/CD Pipelines</div></div>
   </div>
 </div>
 
@@ -793,42 +793,308 @@
     </div>
   </article>
 
-  <!-- ━━━ 6. FITGEN AI & TABKNOCKOUT ━━━ -->
+  <!-- ━━━ 6. FITGEN AI ━━━ -->
   <article class="project fade-in">
     <div class="project-head">
-      <h2>FitGen AI & TabKnockout</h2>
-      <span class="type t-green">Flutter + AI · Cross-Platform Game</span>
+      <h2>FitGen AI</h2>
+      <span class="type t-green">Flutter · Gemini AI · Firebase Full-Stack</span>
     </div>
     <div class="project-body">
       <p class="project-desc">
-        <strong>FitGen AI:</strong> Flutter/Dart fitness app using Gemini API for personalized workout
-        plan generation. BLoC state management, Firebase backend (Auth, Firestore, Functions), and
-        secure API key management via <code>--dart-define</code> compile-time injection.
-        <strong>TabKnockout:</strong> Cross-platform C# game demonstrating core game logic.
+        AI-powered personalized fitness platform built with Flutter/Dart. Uses Gemini API for workout
+        plan generation with structured JSON output. Firebase backend (Auth, Firestore, Functions),
+        Amplitude analytics with circuit-breaker pattern, FatSecret nutrition lookup via Cloud Functions
+        proxy, and comprehensive secret management using <code>--dart-define-from-file</code>.
       </p>
       <div class="tags">
-        <span class="tag">Flutter / Dart</span><span class="tag">BLoC</span>
+        <span class="tag">Flutter / Dart 3.8</span><span class="tag">BLoC</span>
         <span class="tag">GetIt</span><span class="tag">GoRouter</span>
-        <span class="tag">Firebase</span><span class="tag">Gemini API</span>
-        <span class="tag">C#</span>
+        <span class="tag">Firebase Auth</span><span class="tag">Cloud Firestore</span>
+        <span class="tag">Firebase Functions</span><span class="tag">Crashlytics</span>
+        <span class="tag">Gemini API</span><span class="tag">Amplitude</span>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat"><span class="sv">50+</span><span class="sl">Dart Source Files</span></div>
+        <div class="stat"><span class="sv">5</span><span class="sl">Data Layers</span></div>
+        <div class="stat"><span class="sv">6</span><span class="sl">Feature Modules</span></div>
+        <div class="stat"><span class="sv">0</span><span class="sl">Secrets in Binary</span></div>
+      </div>
+
+      <div class="arch">
+        <span class="arch-label">Clean Architecture & Data Flow</span>
+<span class="ae">lib/features/</span>
+  <span class="ac">├─ auth/ → FirebaseAuthDatasource → AuthRepositoryImpl → AuthBloc</span>
+  <span class="ac">├─ onboarding/ → UserProfileModel → OnboardingBloc (goal, fitness, diet, equipment)</span>
+  <span class="ac">├─ workout_generator/ → GeminiAiDatasource + FunctionsAiDatasource → WorkoutGeneratorBloc</span>
+  <span class="ac">├─ nutrition/ → FunctionsNutritionDatasource → NutritionRepositoryImpl</span>
+  <span class="ac">├─ plan/ → FirestorePlanDatasource → PlanRepositoryImpl</span>
+  <span class="ac">└─ profile/ → FirestoreUserDatasource → UserRepositoryImpl</span>
+
+<span class="ae">Secret Management Pipeline:</span>
+  <span class="ac">cp env/dev.example.json env/dev.local.json  (gitignored)</span>
+  <span class="ac">flutter run --dart-define-from-file=env/dev.local.json</span>
+  <span class="ac">Keys: FIREBASE_*, GEMINI_API_KEY, AMPLITUDE_API_KEY (optional)</span>
+  <span class="ac">INVARIANT: git grep catches leaked keys via regex scan before push</span>
+
+<span class="ae">Firebase Functions (Secure Proxy):</span>
+  <span class="ac">Mobile → Cloud Function → FatSecret API (client_id/secret in Secret Manager)</span>
+  <span class="ac">INVARIANT: App binary never contains third-party nutrition API credentials</span>
       </div>
 
       <div class="two-col">
         <div class="info-box">
-          <h4>⚙️ FitGen AI Architecture</h4>
+          <h4>⚙️ Technical Highlights</h4>
           <ul>
-            <li><strong>Secret Management:</strong> Gemini API key injected via <code>--dart-define=GEMINI_API_KEY=...</code> — zero secrets in source control or binary</li>
-            <li><strong>BLoC Pattern:</strong> <code>OnboardingBloc</code> (goal, experience, diet events) → <code>WorkoutGeneratorBloc</code> (loading → success/error states)</li>
-            <li><strong>Gemini Integration:</strong> <code>GeminiClient</code> with structured JSON output (<code>responseMimeType: 'application/json'</code>) + system instruction for safe, progressive workout plans</li>
-            <li><strong>Firebase Proxy:</strong> Cloud Functions proxy external nutrition APIs — no third-party API keys in the app binary</li>
+            <li><strong>Analytics Circuit Breaker:</strong> <code>AnalyticsService</code> (14.9KB) implements a circuit breaker — repeated Amplitude failures open a temporary breaker instead of crashing, reported as non-fatal diagnostics</li>
+            <li><strong>Dual AI Datasources:</strong> <code>GeminiAiDatasource</code> (direct Gemini) + <code>FunctionsAiDatasource</code> (via Cloud Functions) — swappable at DI level</li>
+            <li><strong>Domain Entities:</strong> <code>WorkoutPlan</code> (8KB model), <code>MealPlanModel</code> (5.9KB), <code>NutritionEntry</code>, <code>HomePlanOverview</code>, <code>HomeTodayWorkout</code></li>
+            <li><strong>DI Container:</strong> <code>app_di.dart</code> (11.6KB) registers all dependencies via GetIt — single composition root</li>
           </ul>
         </div>
         <div class="info-box highlight hl-green">
           <h4>🎯 Interview Talking Points</h4>
           <ul>
-            <li>The architecture enforces zero secrets in binary — even if the APK is decompiled, no API keys are exposed</li>
-            <li>BLoC provides complete separation between UI and business logic with typed events and states</li>
-            <li>Firebase Cloud Functions act as a secure proxy layer — the client never communicates with third-party APIs directly</li>
+            <li>Zero secrets in binary enforced architecturally — <code>--dart-define-from-file</code> injects at compile time, and a git grep regex scan catches leaks before push</li>
+            <li>The Firebase Functions proxy means even if someone decompiles the APK, they can't extract FatSecret API credentials</li>
+            <li>Analytics is resilient — circuit breaker pattern prevents provider outages from degrading user experience</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ━━━ 7. TABKNOCKOUT ━━━ -->
+  <article class="project fade-in">
+    <div class="project-head">
+      <h2>TabKnockout</h2>
+      <span class="type t-red" style="background:rgba(248,113,113,0.1);color:var(--red);border:1px solid rgba(248,113,113,0.25);">Unity C# · 100+ Test Files · Roguelite</span>
+    </div>
+    <div class="project-body">
+      <p class="project-desc">
+        A full-scale Unity C# roguelite action game with boss battles, ability systems, wave-based combat,
+        room progression, Neuro Fusion-inspired cognitive challenges, and comprehensive visual quality
+        tuning. Features an extensive test suite with 100+ EditMode test files covering every game system.
+      </p>
+      <div class="tags">
+        <span class="tag">C# / Unity</span><span class="tag">Roguelite</span>
+        <span class="tag">Boss System</span><span class="tag">Ability System</span>
+        <span class="tag">Wave Management</span><span class="tag">Combat System</span>
+        <span class="tag">Projectile System</span><span class="tag">VFX Pipeline</span>
+        <span class="tag">100+ EditMode Tests</span>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat"><span class="sv">100+</span><span class="sl">Test Files</span></div>
+        <div class="stat"><span class="sv">15+</span><span class="sl">Game Systems</span></div>
+        <div class="stat"><span class="sv">25.6KB</span><span class="sl">Largest Test File</span></div>
+        <div class="stat"><span class="sv">14.8KB</span><span class="sl">Enemy Attack Config Tests</span></div>
+      </div>
+
+      <div class="arch">
+        <span class="arch-label">Game Systems Architecture</span>
+<span class="ae">Assets/_Project/Scripts/</span>
+  <span class="ac">├─ Ability/    → AbilityCatalog, AbilityChoiceProvider, AbilitySelectionController</span>
+  <span class="ac">├─ Boss/       → BossAttackFoundation, BossPatternController, BossPhaseController</span>
+  <span class="ac">├─ Camera/     → GameplayCameraController, CameraShakeReceiver, CameraFramingUtility</span>
+  <span class="ac">├─ Characters/ → CharacterAnimationDriver, EnemyPrefabValidation</span>
+  <span class="ac">├─ Combat/     → DamageType, HitContext, KnockbackData, StatusEffect, DashImpactDamage</span>
+  <span class="ac">├─ Enemy/      → EnemyArchetype, EnemyAttackPattern, EnemyHealth, ShieldDamageFilter</span>
+  <span class="ac">├─ Level/      → ChapterConfig, ChapterRunState, RoomCompletion, RoomRewardRule</span>
+  <span class="ac">├─ Pickups/    → PlayerXPController, XPOrbVisualFeedback</span>
+  <span class="ac">├─ Player/     → PlayerDashController, PlayerHealth, PlayerRuntimeStats, WeaponConfig</span>
+  <span class="ac">├─ Projectile/ → ProjectileController (14KB), ProjectileModifierState</span>
+  <span class="ac">├─ Room/       → RoomExitGate, RoomPrefabContract, RuntimeRoomLoader (8.2KB)</span>
+  <span class="ac">├─ Survivor/   → ArenaRunDirector, ActiveSkillController, CuteMonsterContent (24.5KB)</span>
+  <span class="ac">├─ UI/         → BossHealthBar, DashCooldownHud, PlayerHealthHud, AbilitySelectionPanel</span>
+  <span class="ac">├─ VFX/        → PooledVFXSpawner, VFXCatalog, VFXAssetPackCatalogMapper</span>
+  <span class="ac">├─ Visuals/    → EnvironmentLighting, PlayerVisibilityLighting, VisualQualityConfig</span>
+  <span class="ac">└─ Wave/       → WaveManager (8.8KB), WaveConfig, EnemyBossTestWaveContent</span>
+
+<span class="ae">Assets/_Project/Tests/EditMode/</span> <span class="ac">(100+ test files)</span>
+  <span class="ac">├─ 12 Ability tests  ├─ 3 Boss tests    ├─ 4 Camera tests</span>
+  <span class="ac">├─ 12 Combat tests   ├─ 12 Enemy tests  ├─ 12 Level tests</span>
+  <span class="ac">├─ 15 Player tests   ├─ 3 Projectile    ├─ 5 Room tests</span>
+  <span class="ac">├─ 6 Survivor tests  ├─ 10 UI tests     ├─ 5 VFX tests</span>
+  <span class="ac">├─ 5 Visuals tests   └─ 3 Wave tests</span>
+      </div>
+
+      <div class="two-col">
+        <div class="info-box">
+          <h4>⚙️ Key Game Systems</h4>
+          <ul>
+            <li><strong>Boss System:</strong> Multi-phase boss battles with pattern controllers, attack telegraphing, and health bar progression</li>
+            <li><strong>Ability System:</strong> Roguelite ability selection with catalog builder, choice provider rules, and run-specific state tracking</li>
+            <li><strong>Combat:</strong> Dash-based combat with hit registries, knockback physics, damage type system, shield damage filters, and status effects</li>
+            <li><strong>Room Progression:</strong> Chapter-based room loading with reward flow controllers, exit gates, and template configuration</li>
+          </ul>
+        </div>
+        <div class="info-box highlight" style="border-left-color: var(--red);">
+          <h4>🎯 Interview Talking Points</h4>
+          <ul>
+            <li>Over 100 EditMode test files — every game system from boss phases to projectile modifiers has dedicated test coverage</li>
+            <li>The largest test file (<code>ChapterRoomRewardFlowControllerTests.cs</code>, 25.6KB) shows the depth of reward system edge case coverage</li>
+            <li>Enemy attack configurations alone have 14.8KB of dedicated tests — demonstrating production-level quality assurance for a game</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ━━━ 8. MENTAL MATH TRAINER ━━━ -->
+  <article class="project fade-in">
+    <div class="project-head">
+      <h2>Mental Math Trainer</h2>
+      <span class="type t-amber">Expo / React Native · Neuro Fusion · Season Pass</span>
+    </div>
+    <div class="project-body">
+      <p class="project-desc">
+        Advanced cognitive training app built with Expo 54 + React Native 0.81 + React 19. Goes far beyond
+        basic arithmetic — features 6 game modes including the flagship Neuro Fusion (rhythm + math + puzzles
+        + memory), a season-based Neuro Pass economy with anti-abuse protection, 20-theme visual system,
+        and TR/EN localization. Testable domain layer with Jest coverage.
+      </p>
+      <div class="tags">
+        <span class="tag">Expo 54</span><span class="tag">React Native 0.81</span>
+        <span class="tag">React 19</span><span class="tag">TypeScript (Strict)</span>
+        <span class="tag">Jest / ts-jest</span><span class="tag">ESLint / Prettier</span>
+        <span class="tag">Husky / lint-staged</span><span class="tag">i18n (TR/EN)</span>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat"><span class="sv">6</span><span class="sl">Game Modes</span></div>
+        <div class="stat"><span class="sv">20</span><span class="sl">Theme Variants</span></div>
+        <div class="stat"><span class="sv">5</span><span class="sl">Neuro Fusion Phases</span></div>
+        <div class="stat"><span class="sv">TR/EN</span><span class="sl">Localization</span></div>
+      </div>
+
+      <div class="arch">
+        <span class="arch-label">Feature-First Architecture & Neuro Fusion Pipeline</span>
+<span class="ae">src/</span>
+  <span class="ac">├─ app/        → Bootstrap, DI container, navigation, theme, i18n, config</span>
+  <span class="ac">├─ core/       → Analytics, ads, storage, remote config, telemetry, PII guards</span>
+  <span class="ac">├─ features/</span>
+  <span class="ac">│  ├─ game/    → Mental math domain, scoring, Neuro Fusion, question gen, combos</span>
+  <span class="ac">│  ├─ neuroPass/ → Season manifest, quests (daily/weekly/boss), rewards, IAP, anti-abuse</span>
+  <span class="ac">│  └─ theme/   → 20-theme catalog, unlock evaluator, preference store</span>
+  <span class="ac">└─ ui/         → Shared layout, button, feedback components</span>
+
+<span class="ae">Game Modes:</span>
+  <span class="as">Daily</span> <span class="ac">— Seed-based daily challenge with limited questions</span>
+  <span class="as">Sprint</span> <span class="ac">— Timed, max questions per minute</span>
+  <span class="as">Zen</span> <span class="ac">— Untimed focused practice</span>
+  <span class="as">Survival</span> <span class="ac">— Competitive with mistake pressure</span>
+  <span class="as">Custom Training</span> <span class="ac">— Premium: choose duration, limits, operations</span>
+  <span class="as">Neuro Fusion</span> <span class="ac">— Flagship: rhythm math → puzzle → cognitive blend → boss phase</span>
+
+<span class="ae">Neuro Fusion Phases:</span>
+  <span class="ac">1. Rhythm Math — Answer inside beat windows (perfect/great/good/offbeat timing)</span>
+  <span class="ac">2. Puzzle Phase — Sequences, grid puzzles, equation balancing, quick estimates</span>
+  <span class="ac">3. Cognitive Blend — Echo Stack (memory) + Reflex Gate (reaction time)</span>
+  <span class="ac">4. Boss Phase — Intense mixed micro-challenges</span>
+  <span class="ac">5. Result Screen — Grade, accuracy, beat offset, flow peak, phase breakdown</span>
+      </div>
+
+      <div class="two-col">
+        <div class="info-box">
+          <h4>⚙️ Neuro Pass Economy & Anti-Abuse</h4>
+          <ul>
+            <li><strong>Season Manifest:</strong> Validation with fallback behavior, quest structure (daily, weekly, boss quests), idempotent XP grants</li>
+            <li><strong>Anti-Abuse:</strong> Spam tap detection, time spoofing checks, NXP cap policies — all enforced at the domain layer</li>
+            <li><strong>Theme System:</strong> 20 themes across 5 categories (free, premium, streak unlock, seasonal, limited collab) with runtime light/dark/system modes</li>
+            <li><strong>Analytics Sanitization:</strong> Event parameters pass through PII guards and sanitizer layers before transmission</li>
+          </ul>
+        </div>
+        <div class="info-box highlight hl-amber">
+          <h4>🎯 Interview Talking Points</h4>
+          <ul>
+            <li>Neuro Fusion isn't just math — it's a multi-phase cognitive pipeline combining rhythm timing, pattern recognition, memory, and reaction time in a single run</li>
+            <li>The Neuro Pass economy includes anti-abuse protection at the domain level, not just UI-level checks</li>
+            <li>Repository interfaces with a local-first migration plan demonstrate forward-thinking backend-ready architecture</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ━━━ 9. EKOMOBIL ━━━ -->
+  <article class="project fade-in">
+    <div class="project-head">
+      <h2>EkoMobil</h2>
+      <span class="type t-cyan">Full-Stack · Flutter + Java Spring Boot</span>
+    </div>
+    <div class="project-body">
+      <p class="project-desc">
+        Full-stack public transportation platform. Flutter mobile app with a Java Spring Boot backend.
+        Features real-time bus tracking with WebSocket telemetry, smart card payment system (top-up,
+        charge, transfer), route/stop management, admin panel with role-based access control,
+        and JWT authentication with password reset flows.
+      </p>
+      <div class="tags">
+        <span class="tag">Flutter / Dart</span><span class="tag">Java / Spring Boot</span>
+        <span class="tag">Spring Security</span><span class="tag">WebSocket (STOMP)</span>
+        <span class="tag">PostgreSQL</span><span class="tag">Docker</span>
+        <span class="tag">JWT Auth</span><span class="tag">OpenAPI / Swagger</span>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat"><span class="sv">13</span><span class="sl">REST Controllers</span></div>
+        <div class="stat"><span class="sv">25+</span><span class="sl">DTOs</span></div>
+        <div class="stat"><span class="sv">8+</span><span class="sl">Domain Entities</span></div>
+        <div class="stat"><span class="sv">Full-Stack</span><span class="sl">Solo Development</span></div>
+      </div>
+
+      <div class="arch">
+        <span class="arch-label">Full-Stack System Architecture</span>
+<span class="ae">FLUTTER MOBILE APP</span> <span class="ac">(ekomobil_mobil)</span>
+  <span class="ac">├─ Real-time bus tracking map</span>
+  <span class="ac">├─ Route search & stop information</span>
+  <span class="ac">├─ Smart card management (balance, top-up, charge, transfer)</span>
+  <span class="ac">└─ User profile & authentication</span>
+  <span class="aa">↓</span> <span class="ac">REST + WebSocket (STOMP)</span>
+<span class="ae">SPRING BOOT BACKEND</span> <span class="ac">(ekomobil_backend, com.ekomobil)</span>
+  <span class="ac">├─ api/rest/auth/</span>
+  <span class="ac">│  └─ AuthController.java (5.2KB)</span>
+  <span class="ac">│     → Login, Signup, ForgotPassword, VerifyResetCode, PerformPasswordReset</span>
+  <span class="ac">├─ api/rest/publicapi/</span>
+  <span class="ac">│  ├─ BusController       → Real-time bus fleet management</span>
+  <span class="ac">│  ├─ RouteController      → Route CRUD + auto-position</span>
+  <span class="ac">│  ├─ StopController       → Stop management with geo coordinates</span>
+  <span class="ac">│  ├─ CardController (2.7KB) → CreateCard, TopUp, Charge, Transfer, Transactions</span>
+  <span class="ac">│  ├─ MapController        → Map data aggregation for mobile rendering</span>
+  <span class="ac">│  ├─ SearchController     → Fuzzy search across routes and stops</span>
+  <span class="ac">│  ├─ TelemetryController  → Bus GPS/speed telemetry ingestion</span>
+  <span class="ac">│  ├─ AdminUserController (4.8KB) → User management with role assignment</span>
+  <span class="ac">│  ├─ AdminRoleController  → Role-based access control management</span>
+  <span class="ac">│  ├─ UserMeController     → Profile & password change</span>
+  <span class="ac">│  └─ StatusController     → Health check endpoint</span>
+  <span class="ac">├─ api/ws/ → PingController (WebSocket STOMP health)</span>
+  <span class="ac">├─ config/</span>
+  <span class="ac">│  ├─ SecurityConfig.java (8.5KB) → JWT filter chain, CORS, RBAC</span>
+  <span class="ac">│  ├─ OpenApiConfig.java   → Swagger/OpenAPI documentation</span>
+  <span class="ac">│  └─ WebSocketConfig.java → STOMP endpoint configuration</span>
+  <span class="ac">├─ domain/entity/</span>
+  <span class="ac">│  ├─ Bus, Card, CardTransaction, DeviceKey</span>
+  <span class="ac">│  ├─ Route, RouteStop, Stop, Telemetry, User, Role</span>
+  <span class="ac">└─ docker/ → docker-compose.yml (PostgreSQL)</span>
+      </div>
+
+      <div class="two-col">
+        <div class="info-box">
+          <h4>⚙️ Backend Engineering</h4>
+          <ul>
+            <li><strong>Smart Card System:</strong> <code>CardController</code> manages create, top-up, charge, transfer, and transaction history — financial ACID guarantees via JPA</li>
+            <li><strong>Real-Time Telemetry:</strong> Buses push GPS and speed data via <code>TelemetryController</code>, consumed by mobile app through WebSocket STOMP for live map updates</li>
+            <li><strong>Security:</strong> <code>SecurityConfig.java</code> (8.5KB) implements JWT authentication, role-based authorization, and CORS configuration for production deployment</li>
+            <li><strong>Admin Panel:</strong> Full user management with role assignment and abuse control capabilities</li>
+          </ul>
+        </div>
+        <div class="info-box highlight hl-cyan">
+          <h4>🎯 Interview Talking Points</h4>
+          <ul>
+            <li>I built both the mobile app AND the backend from scratch — demonstrating true full-stack capability</li>
+            <li>The smart card payment system handles real financial transactions with ACID guarantees — top-up, charge, and card-to-card transfers</li>
+            <li>Real-time bus tracking uses WebSocket STOMP for low-latency telemetry streaming directly to the Flutter map view</li>
           </ul>
         </div>
       </div>
@@ -843,14 +1109,15 @@
     <thead><tr><th>Domain</th><th>Technologies</th></tr></thead>
     <tbody>
       <tr><td><strong>Apple Native</strong></td><td>Swift, SwiftUI, UIKit, SpriteKit, Core ML, Metal, Vision, Core Image, StoreKit 2, SwiftData, AVFoundation, PhotosUI</td></tr>
-      <tr><td><strong>Cross-Platform</strong></td><td>React Native 0.82, Expo, TypeScript, Flutter, Dart, BLoC, GetIt, GoRouter</td></tr>
+      <tr><td><strong>Cross-Platform</strong></td><td>React Native 0.82, Expo 54, TypeScript, Flutter, Dart, BLoC, GetIt, GoRouter, React 19</td></tr>
       <tr><td><strong>Backend (JVM)</strong></td><td>Java 21, Spring Boot 3, Modular Monolith, Spring Data JPA, Hibernate, Flyway, ArchUnit, Micrometer, Testcontainers</td></tr>
       <tr><td><strong>Backend (Node/Py)</strong></td><td>Node.js 20+, Fastify, Python 3.11, FastAPI, SymPy, PostgreSQL, Redis, Pydantic V2</td></tr>
       <tr><td><strong>AI / ML</strong></td><td>PyTorch, Core ML (on-device), WHAM/SMPL, RTMPose/MMPose, Gemini/GPT (provider-neutral routing), coremltools</td></tr>
       <tr><td><strong>Android Native</strong></td><td>Kotlin, Camera2, DevicePolicyManager, Accessibility Service, MQTT, PackageInstaller, NDK 27</td></tr>
       <tr><td><strong>Infra & DevOps</strong></td><td>RunPod Serverless, AWS S3/MinIO, Docker, Firebase, Fastlane (7 lanes), GitHub Actions (9 workflows), Blender Headless</td></tr>
-      <tr><td><strong>Testing</strong></td><td>JUnit 5, Mockito, Testcontainers, XCTest, XCUITest, Pytest, Jest, ArchUnit, Visual Regression (BeautyQA), Golden Datasets</td></tr>
-      <tr><td><strong>Security & Privacy</strong></td><td>STRIDE Threat Modeling, COPPA/FERPA/GDPR, Keychain/Secure Enclave, RFC 7807, Token Rotation with Reuse Detection</td></tr>
+      <tr><td><strong>Testing</strong></td><td>JUnit 5, Mockito, Testcontainers, XCTest, XCUITest, Pytest, Jest, ts-jest, ArchUnit, Visual Regression (BeautyQA), Golden Datasets, 100+ Unity EditMode Tests</td></tr>
+      <tr><td><strong>Game Development</strong></td><td>Unity / C#, SpriteKit, Boss/Ability/Wave/Combat Systems, Roguelite Architecture, VFX Pipelines, Deterministic State Reducers</td></tr>
+      <tr><td><strong>Security & Privacy</strong></td><td>STRIDE Threat Modeling, COPPA/FERPA/GDPR, Keychain/Secure Enclave, RFC 7807, JWT/RBAC, Token Rotation, Anti-Abuse Systems</td></tr>
     </tbody>
   </table>
 </div>

@@ -233,7 +233,101 @@
       .gradient { background: none; -webkit-text-fill-color: #111; }
       .text2, .text3 { color: #444; }
     }
-  </style>
+  
+    /* === MODERN UI ENHANCEMENTS === */
+    .filter-container {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 36px;
+      background: var(--surface); padding: 6px; border-radius: 12px;
+      border: 1px solid var(--border); width: fit-content;
+    }
+    .filter-btn {
+      background: transparent; border: 1px solid transparent; color: var(--text2);
+      padding: 8px 16px; border-radius: 8px; font-size: 0.82rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .filter-btn:hover { color: var(--text); background: var(--surface2); }
+    .filter-btn.active {
+      background: var(--surface2); color: #fff; border-color: var(--border2);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .filter-btn .count {
+      font-size: 0.7rem; padding: 2px 7px; border-radius: 100px;
+      background: rgba(255,255,255,0.08); color: var(--text3);
+    }
+    .filter-btn.active .count { background: var(--blue); color: #fff; }
+
+    .project {
+      transition: opacity 0.35s ease, transform 0.35s ease, border-color 0.3s, box-shadow 0.3s;
+    }
+    .project.is-hidden {
+      display: none !important;
+    }
+
+    /* Live status badge */
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+      padding: 4px 12px; border-radius: 100px;
+    }
+    .status-badge.live {
+      background: rgba(52,211,153,0.12); color: var(--green); border: 1px solid rgba(52,211,153,0.3);
+    }
+    .status-badge.live::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green);
+      box-shadow: 0 0 8px var(--green); animation: pulse 1.8s infinite;
+    }
+    .status-badge.sim {
+      background: rgba(167,139,250,0.12); color: var(--purple); border: 1px solid rgba(167,139,250,0.3);
+    }
+    .status-badge.sim::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--purple);
+      box-shadow: 0 0 8px var(--purple); animation: pulse 1.8s infinite;
+    }
+    .status-badge.ai-badge {
+      background: rgba(79,143,247,0.12); color: var(--blue); border: 1px solid rgba(79,143,247,0.3);
+    }
+    .status-badge.ai-badge::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--blue);
+      box-shadow: 0 0 8px var(--blue); animation: pulse 1.8s infinite;
+    }
+
+    /* Action Repo Button */
+    .project-actions {
+      display: flex; gap: 12px; margin-top: 24px; padding-top: 20px;
+      border-top: 1px solid var(--border); flex-wrap: wrap;
+    }
+    .btn-repo {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 16px; border-radius: 8px; font-size: 0.82rem; font-weight: 600;
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+      color: var(--text); text-decoration: none; transition: all 0.2s;
+    }
+    .btn-repo:hover {
+      background: rgba(255,255,255,0.1); border-color: var(--border2);
+      color: #fff; transform: translateY(-1px);
+    }
+    .btn-repo svg { width: 14px; height: 14px; fill: currentColor; }
+
+    /* Visual mini telemetry bars */
+    .telemetry-strip {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px; margin: 18px 0 24px;
+    }
+    .telemetry-card {
+      background: rgba(0,0,0,0.25); border: 1px solid var(--border); border-radius: 8px;
+      padding: 10px 14px;
+    }
+    .telemetry-header {
+      display: flex; justify-content: space-between; font-size: 0.72rem;
+      color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px;
+    }
+    .telemetry-header span:last-child { color: var(--text); font-weight: 700; }
+    .telemetry-track {
+      height: 4px; background: rgba(255,255,255,0.06); border-radius: 4px; overflow: hidden;
+    }
+    .telemetry-fill { height: 100%; border-radius: 4px; }
+</style>
 </head>
 <body>
 <div class="bg-glow"></div>
@@ -257,10 +351,9 @@
     <div class="hero-label">Available for Hire</div>
     <h1><span class="gradient">Burak Coşkun</span></h1>
     <p class="hero-sub">
-      Software Engineer specializing in iOS, cross-platform mobile, and full-stack systems.
-      I design and ship production-grade platforms end-to-end — from custom on-device ML inference
-      and GPU-accelerated serverless pipelines to enterprise Android kiosk systems and
-      AI verification engines. Sakarya University CS, based in Kocaeli.
+      Staff-grade software engineer specializing in mobile systems architecture, distributed backends, high-performance simulation engines, and AI platforms.
+      I design and ship production-grade platforms end-to-end — from custom on-device ML inference and GPU-accelerated serverless clusters
+      to enterprise Android kiosk physical fleets, Hexagonal DDD game &amp; simulation engines, and formal AI verification platforms. Sakarya University CS, based in Kocaeli.
     </p>
     <div class="hero-pills">
       <a class="pill" href="https://github.com/coskunburak" target="_blank">
@@ -277,33 +370,136 @@
 
   <!-- METRICS -->
   <div class="metrics fade-in">
-    <div class="metric"><div class="num">10</div><div class="label">Production Systems</div></div>
-    <div class="metric"><div class="num">120+</div><div class="label">Technical Docs</div></div>
+    <div class="metric"><div class="num">12+</div><div class="label">Production Systems</div></div>
+    <div class="metric"><div class="num">160+</div><div class="label">Technical Docs</div></div>
     <div class="metric"><div class="num">7</div><div class="label">Core Languages</div></div>
-    <div class="metric"><div class="num">300+</div><div class="label">Test Suites</div></div>
-    <div class="metric"><div class="num">150+</div><div class="label">API Endpoints</div></div>
-    <div class="metric"><div class="num">20+</div><div class="label">DB Migrations</div></div>
-    <div class="metric"><div class="num">7</div><div class="label">ADRs</div></div>
-    <div class="metric"><div class="num">8+</div><div class="label">Cloud &amp; AI Services</div></div>
+    <div class="metric"><div class="num">1,400+</div><div class="label">Automated Tests</div></div>
+    <div class="metric"><div class="num">180+</div><div class="label">API Endpoints</div></div>
+    <div class="metric"><div class="num">25+</div><div class="label">DB Migrations</div></div>
+    <div class="metric"><div class="num">11+</div><div class="label">Formal ADRs</div></div>
+    <div class="metric"><div class="num">10+</div><div class="label">Cloud &amp; AI Services</div></div>
   </div>
 </div>
 
 <!-- ═════════════════════ PROJECTS ═════════════════════ -->
 <div class="container" id="projects">
   <div class="section-title">Production Engineering — Deep Dives</div>
+  <!-- CATEGORY FILTER -->
+  <div class="filter-container fade-in">
+    <button class="filter-btn active" data-filter="all">All Systems <span class="count">12</span></button>
+    <button class="filter-btn" data-filter="ai">AI &amp; Symbolic CAS <span class="count">3</span></button>
+    <button class="filter-btn" data-filter="game-sim">Engines &amp; Simulation <span class="count">4</span></button>
+    <button class="filter-btn" data-filter="enterprise">Enterprise &amp; Fleet <span class="count">3</span></button>
+    <button class="filter-btn" data-filter="apple-mobile">Apple Native &amp; Mobile <span class="count">2</span></button>
+  </div>
 
-  <!-- ━━━ 1. VERIFIED AI ━━━ -->
-  <article class="project fade-in">
+
+  <!-- ━━━ 1. PROJECT: LAST SIGNAL ━━━ -->
+  <article class="project fade-in" data-category="game-sim">
     <div class="project-head">
-      <h2>Verified AI</h2>
-      <span class="type t-blue">Production AI Platform · 71 Docs · 7 ADRs</span>
+      <h2>Project: Last Signal</h2>
+      <span class="type t-purple">Systemic Survival Horror &amp; Engine Architecture · 950+ Tests · Hexagonal DDD · HDRP</span>
     </div>
     <div class="project-body">
       <p class="project-desc">
-        iOS-first AI mathematics learning platform. SwiftUI client backed by a Java 21 Spring Boot
-        modular monolith. Orchestrates provider-neutral LLMs and programmatically verifies every
-        AI-generated math answer using a deterministic SymPy engine. 16 Flyway database migrations,
-        7 CI/CD pipelines, and 13 non-negotiable architectural invariants.
+        High-fidelity, systemic survival horror platform built with Pure C# Domain-Driven Design (DDD)
+        and Hexagonal (Ports &amp; Adapters) Architecture on Unity 6 LTS &amp; HDRP 17.5. Completely decouples
+        core domain rules, inventory escrow transactions, metabolic biological decay, quad-clock time-lapse systems,
+        and acoustic sensory AI from UnityEngine presentation. Verified by 950+ automated EditMode &amp; PlayMode
+        tests executed headlessly in CI with zero memory leaks and 60 FPS performance budgets.
+      </p>
+      <div class="tags">
+        <span class="tag">Unity 6 LTS</span><span class="tag">C# 12 / .NET Standard</span><span class="tag">HDRP 17.5</span>
+        <span class="tag">Hexagonal Architecture</span><span class="tag">Domain-Driven Design (DDD)</span>
+        <span class="tag">950+ Tests</span><span class="tag">Escrow Transaction Boundary</span>
+        <span class="tag">Quad-Clock Engine</span><span class="tag">Acoustic Attenuation</span>
+        <span class="tag">Dual-Raycast Ballistics</span><span class="tag">4-Tier Sensory AI</span>
+        <span class="tag">Headless CI/CD</span>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat"><span class="sv">950+</span><span class="sl">Passed Tests (Edit/Play)</span></div>
+        <div class="stat"><span class="sv">60 FPS</span><span class="sl">1080p / 30 FPS 4K Budget</span></div>
+        <div class="stat"><span class="sv">4-Tier</span><span class="sl">Simulation LOD Engine</span></div>
+        <div class="stat"><span class="sv">100%</span><span class="sl">Pure C# Domain Isolation</span></div>
+        <div class="stat"><span class="sv">3-Chan</span><span class="sl">World Acoustic Pressure</span></div>
+        <div class="stat"><span class="sv">0</span><span class="sl">Duplication / Escrow Safe</span></div>
+      </div>
+
+      <div class="arch">
+        <span class="arch-label">Hexagonal Ports &amp; Adapters + Escrow Transaction Pipeline</span>
+<span class="ae">CLIENT RUNTIME (Unity 6 / HDRP)</span> <span class="ac">→ Player Inputs, Camera, Spatial Audio &amp; Rendering</span>
+  <span class="aa">↓</span>
+<span class="ak">PORTS (Contracts)</span> <span class="ac">│ IInputPort, IRenderPort, IAudioPlaybackPort, IPhysicsRaycastPort</span>
+  <span class="aa">↓</span>
+<span class="ae">PURE C# DOMAIN ENGINE</span> <span class="ac">(Zero UnityEngine dependencies, 100% Deterministic)</span>
+  <span class="ac">├─ Inventory Subsystem: Escrow Transactions (2-Phase: Reserve → Validate → Commit/Rollback)</span>
+  <span class="ac">│  INVARIANT: Zero item duplication under race conditions; strict weight &amp; grid constraints</span>
+  <span class="ac">├─ Quad-Clock Engine: Real-Time vs World-Time vs Biological Decay vs Analytical Time-Lapse</span>
+  <span class="ac">│  → Simulates metabolic spoilage and off-screen world chunks deterministically</span>
+  <span class="ac">├─ Acoustic Attenuation Engine: Frequency-dependent wall occlusion (Wood: 0.35, Concrete: 0.85)</span>
+  <span class="ac">│  → Generates 3-channel pressure (Local, Sector, Global) to drive dynamic AI horde encounters</span>
+  <span class="ac">├─ Sensory-Perceptual AI: 4-Tier LOD (Microscopic → Raycast → Spatial Grid → Macro Demographics)</span>
+  <span class="ac">└─ Ballistics Engine: Dual-raycast muzzle + camera alignment with material penetration factors</span>
+  <span class="aa">↓</span>
+<span class="ak">ADAPTERS (Infrastructure)</span> <span class="ac">│ UnityPhysicsAdapter, HDRPAudioAdapter, BinaryStatePersistence</span>
+  <span class="aa">↓</span>
+<span class="ae">HEADLESS CI TEST RUNNER</span> <span class="ac">← 950+ EditMode &amp; PlayMode tests execute headlessly in &lt;120s</span>
+      </div>
+
+      <details>
+        <summary>Systemic Subsystems &amp; Transactional Guarantees</summary>
+        <div class="detail-body">
+          <p><strong>1. Transactional Inventory with Escrow Guarantees:</strong> Prevents item duplication during container transfers, crafting, and network latency. State mutations operate on an ACID-like transaction model where source inventory locks and escrows items before target inventory confirms availability.</p>
+          <p><strong>2. Quad-Clock Simulation:</strong> Manages decoupled simulation rates across four distinct time horizons: Presentation/Real-time (60Hz), World/Celestial Time (day-night cycle), Biological Metabolism (hydration, caloric burn, wound trauma, infection), and Analytical Time-Lapse (simulating offline persistence when chunks unload).</p>
+          <p><strong>3. Dual-Raycast Ballistics &amp; Visual Alignment:</strong> Eliminates muzzle-clipping exploits while preserving crosshair parallax accuracy by performing a simultaneous trace from camera viewpoint and firearm muzzle barrel, checking line-of-sight occlusion before computing kinetic penetration.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Acoustic Occlusion &amp; 4-Tier Sensory AI Engine</summary>
+        <div class="detail-body">
+          <p><strong>Physical Acoustic Attenuation:</strong> Unlike simple distance-falloff audio, the acoustic subsystem casts audio probe rays against environment physics geometry, applying frequency-dependent absorption coefficients for wood, sheet metal, and reinforced concrete. Gunshots and glass breaks broadcast spatial acoustic events that stimulate the infected horde.</p>
+          <p><strong>4-Tier Simulation Level-of-Detail (LOD):</strong></p>
+          <ul>
+            <li><code>LOD 0 (Microscopic &lt;20m):</code> Full per-frame raycasting, field-of-view peripheral detection, head-tracking bones, and direct auditory stimulus perception.</li>
+            <li><code>LOD 1 (Tactical 20-60m):</code> Simplified pathfinding corridors, interval sensory polling (5Hz), and approximate sound localization.</li>
+            <li><code>LOD 2 (Spatial Grid 60-150m):</code> Coarse grid-cell occupancy simulation without active physics bodies.</li>
+            <li><code>LOD 3 (Macro Demographics &gt;150m):</code> Population density vectors and macro horde migrations managed by the analytical simulation clock.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details>
+        <summary>Automated Verification &amp; Headless CI Suite (950+ Tests)</summary>
+        <div class="detail-body">
+          <p>The codebase features over <strong>950+ automated EditMode and PlayMode tests</strong> written in C# and executed via Unity headless CLI in continuous integration. Tests cover:</p>
+          <ul>
+            <li><strong>Inventory Escrow Invariants:</strong> Verifying zero item loss or duplication across 10,000 randomized concurrent transfer transactions.</li>
+            <li><strong>Ballistics &amp; Occlusion:</strong> Asserting penetration damage dropoff curves across 12 distinct material types.</li>
+            <li><strong>Metabolic Degradation:</strong> Validating that starvation, hypothermia, and blood loss accurately trigger systemic organ failure states deterministically.</li>
+            <li><strong>Save State Schema Migration:</strong> Forward-compatibility tests ensuring save files migrate across schema revisions without data loss.</li>
+          </ul>
+        </div>
+      </details>
+    </div>
+    <div class="project-actions"><a class="btn-repo" href="https://github.com/coskunburak/Last-Signal" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg> View Repository on GitHub <span>&rarr;</span></a></div>
+    </div>
+  </article>
+
+  <!-- ━━━ 2. VERIFIED AI ━━━ -->
+  <article class="project fade-in" data-category="ai">
+    <div class="project-head">
+      <h2>Verified AI</h2>
+      <span class="type t-blue">Production AI Platform · Sprint 6.6 · 400+ Tests · 71 Docs · 7 ADRs</span>
+    </div>
+    <div class="project-body">
+      <p class="project-desc">
+        Production-grade, verification-centered AI mathematics learning platform enforcing the immutable architectural invariant:
+        AI Solution Candidate != Verified Mathematical Truth. Decouples untrusted generative AI ideation from deterministic mathematical
+        proof verification. Backed by a Java 21 Spring Boot 4 Modulith, Swift 6 SwiftUI client, and a non-routable SymPy 1.13 CAS engine.
+        Fully reconciled local delivery (Sprint 6.6 TARGETED_RECONCILIATION_PASSED) backed by 185 iOS tests, 218 backend cases,
+        and SEC-001..015 security validation.
       </p>
       <div class="tags">
         <span class="tag">Java 21</span><span class="tag">Spring Boot 3</span><span class="tag">SwiftUI</span>
@@ -313,12 +509,12 @@
       </div>
 
       <div class="stats-row">
-        <div class="stat"><span class="sv">71</span><span class="sl">Technical Docs</span></div>
-        <div class="stat"><span class="sv">7</span><span class="sl">ADRs</span></div>
+        <div class="stat"><span class="sv">403</span><span class="sl">Verified Tests (185 iOS / 218 Backend)</span></div>
+        <div class="stat"><span class="sv">71</span><span class="sl">Technical Docs &amp; 7 ADRs</span></div>
         <div class="stat"><span class="sv">16</span><span class="sl">DB Migrations</span></div>
-        <div class="stat"><span class="sv">7</span><span class="sl">CI Pipelines</span></div>
-        <div class="stat"><span class="sv">13</span><span class="sl">Core Invariants</span></div>
-        <div class="stat"><span class="sv">6</span><span class="sl">Bounded Contexts</span></div>
+        <div class="stat"><span class="sv">SEC-015</span><span class="sl">Security Verified (PASS)</span></div>
+        <div class="stat"><span class="sv">500ms</span><span class="sl">CAS CPU Timeout Budget</span></div>
+        <div class="stat"><span class="sv">6</span><span class="sl">Bounded Modulith Contexts</span></div>
       </div>
 
       <div class="arch">
@@ -414,10 +610,12 @@
         </div>
       </div>
     </div>
+    <div class="project-actions"><a class="btn-repo" href="https://github.com/coskunburak/verified_ai" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg> View Repository on GitHub <span>&rarr;</span></a></div>
+    </div>
   </article>
 
-  <!-- ━━━ 2. MOCAPEXPO ━━━ -->
-  <article class="project fade-in">
+  <!-- ━━━ 3. MOCAPEXPO ━━━ -->
+  <article class="project fade-in" data-category="ai">
     <div class="project-head">
       <h2>MocapExpo</h2>
       <span class="type t-amber">⭐ Graduation Thesis · Full Pipeline</span>
@@ -523,10 +721,12 @@
         </div>
       </div>
     </div>
+    <div class="project-actions"><a class="btn-repo" href="https://github.com/coskunburak/mocap" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg> View Repository on GitHub <span>&rarr;</span></a></div>
+    </div>
   </article>
 
-  <!-- ━━━ 3. SEYIR KIOSK ━━━ -->
-  <article class="project fade-in">
+  <!-- ━━━ 4. SEYIR KIOSK ━━━ -->
+  <article class="project fade-in" data-category="enterprise">
     <div class="project-head">
       <h2>Seyir Kiosk</h2>
       <span class="type t-cyan">🟢 Live in Corporate Production</span>
@@ -627,10 +827,82 @@
         </div>
       </div>
     </div>
+    <div class="project-actions"><a class="btn-repo" href="https://github.com/coskunburak/seyirkiosk" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg> View Repository on GitHub <span>&rarr;</span></a></div>
+    </div>
   </article>
 
-  <!-- ━━━ 4. GLOWSTUDIO AI ━━━ -->
-  <article class="project fade-in">
+    <!-- ━━━ 5. CLINIC APPOINTMENT SYSTEM ━━━ -->
+  <article class="project fade-in" data-category="enterprise">
+    <div class="project-head">
+      <h2>Clinic Appointment System</h2>
+      <span class="type t-green">Enterprise Healthcare Monolith · Java 21 · Spring Boot 3.4.2 · PostgreSQL 17</span>
+    </div>
+    <div class="project-body">
+      <p class="project-desc">
+        Enterprise-grade, multi-branch hospital and clinic appointment management monolith built with
+        Java 21, Spring Boot 3.4.2, and PostgreSQL 17. Architected on strict Domain-Driven Design (DDD)
+        and SOLID object-oriented principles. Implements Flyway version-controlled migrations,
+        Jakarta JPA persistence mappings strictly verified via ddl-auto=validate, immutable Value Objects,
+        and Testcontainers-backed integration test suites.
+      </p>
+      <div class="tags">
+        <span class="tag">Java 21</span><span class="tag">Spring Boot 3.4.2</span><span class="tag">PostgreSQL 17</span>
+        <span class="tag">Flyway V1</span><span class="tag">Jakarta JPA / Hibernate</span><span class="tag">Testcontainers</span>
+        <span class="tag">Docker Compose</span><span class="tag">Domain-Driven Design</span><span class="tag">OOP &amp; SOLID</span>
+        <span class="tag">Maven 3.9</span><span class="tag">GitHub Actions CI</span>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat"><span class="sv">S01–S10</span><span class="sl">Structured Sprint Plan</span></div>
+        <div class="stat"><span class="sv">PostgreSQL 17</span><span class="sl">Enterprise Relational DB</span></div>
+        <div class="stat"><span class="sv">100%</span><span class="sl">Immutable Value Objects</span></div>
+        <div class="stat"><span class="sv">Flyway V1</span><span class="sl">Schema Versioning</span></div>
+        <div class="stat"><span class="sv">ddl=validate</span><span class="sl">Strict Hibernate Guard</span></div>
+        <div class="stat"><span class="sv">Zero</span><span class="sl">Raw Entity Exposure</span></div>
+      </div>
+
+      <div class="arch">
+        <span class="arch-label">Layered Clean Architecture &amp; Enterprise Persistence Pipeline</span>
+<span class="ae">REST API / CLIENT LAYER</span> <span class="ac">→ Controllers with Jakarta Bean Validation &amp; RFC 7807 Error Responses</span>
+  <span class="aa">↓</span>
+<span class="ak">APPLICATION USE CASES</span> <span class="ac">│ AppointmentBookingService, DoctorScheduleService, ClinicBranchService</span>
+  <span class="ac">│ Transaction Boundaries (@Transactional with isolation = READ_COMMITTED)</span>
+  <span class="aa">↓</span>
+<span class="ae">DOMAIN LAYER (SOLID &amp; OOP)</span> <span class="ac">(Pure Business Logic &amp; Rich Domain Models)</span>
+  <span class="ac">├─ BaseEntity: Audit timestamps, soft deletion flags, UUID primary keys</span>
+  <span class="ac">├─ Immutable Value Objects: TimeSlot (start, end, duration), Money, MedicalRecordNumber</span>
+  <span class="ac">├─ Polymorphic Specializations: Doctor → Specialist / GeneralSurgeon / Pediatrician</span>
+  <span class="ac">└─ Business Invariants: No overlapping appointment slots, doctor availability locks</span>
+  <span class="aa">↓</span>
+<span class="ak">INFRASTRUCTURE LAYER</span> <span class="ac">│ Spring Data JPA Repositories, Flyway V1 Migrations, PostgreSQL 17</span>
+  <span class="ac">INVARIANT: hibernate.ddl-auto=validate ensures DB schema matches Flyway migrations strictly</span>
+  <span class="aa">↓</span>
+<span class="ae">TESTCONTAINERS CI SUITE</span> <span class="ac">← Spins up real PostgreSQL 17 Docker container for integration assertions</span>
+      </div>
+
+      <details>
+        <summary>Domain Encapsulation, Value Objects &amp; SOLID Modeling</summary>
+        <div class="detail-body">
+          <p><strong>Encapsulation via Value Objects:</strong> Temporal intervals are guarded by the immutable <code>TimeSlot</code> Value Object, which strictly validates that slot start time precedes end time, duration conforms to clinic policy (e.g., 15 or 30 min intervals), and slots cannot span midnight. Primitive obsession is eliminated across all business boundaries.</p>
+          <p><strong>Inheritance &amp; Polymorphism:</strong> Medical staff hierarchies use mapped superclasses and strategy-based consultation pricing policies, allowing branch clinics to calculate insurance co-pays and doctor payouts polymorphically without fragile switch/case branching.</p>
+          <p><strong>Separation of Concerns:</strong> Domain entities never leak to the API layer; custom DTO assemblers map between internal entities and external request/response models, enforcing complete data isolation.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Persistence Rigor &amp; Testcontainers Integration Testing</summary>
+        <div class="detail-body">
+          <p><strong>Strict Schema Integrity (ddl-auto=validate):</strong> Unlike toy setups that use Hibernate <code>update</code> or <code>create-drop</code>, the database schema is strictly version-controlled with Flyway V1 migrations. Hibernate is locked in <code>validate</code> mode, guaranteeing that any mismatch between Java entity annotations and SQL table schemas halts application startup immediately.</p>
+          <p><strong>Testcontainers-Backed Verification:</strong> Integration test suites do not rely on in-memory H2 mocks that hide PostgreSQL-specific features. Every test run programmatically boots an ephemeral PostgreSQL 17 container via Testcontainers, executing migration scripts and validating constraint transactions under real PostgreSQL database engines.</p>
+        </div>
+      </details>
+    </div>
+    <div class="project-actions"><a class="btn-repo" href="https://github.com/coskunburak/clinic_Appointment_System-" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg> View Repository on GitHub <span>&rarr;</span></a></div>
+    </div>
+  </article>
+
+<!-- ━━━ 6. GLOWSTUDIO AI ━━━ -->
+  <article class="project fade-in" data-category="apple-mobile">
     <div class="project-head">
       <h2>GlowStudio AI</h2>
       <span class="type t-pink">On-Device Machine Learning · Zero Cloud</span>
@@ -701,10 +973,12 @@
         </div>
       </div>
     </div>
+    <div class="project-actions"><a class="btn-repo" href="https://github.com/coskunburak/glowStudioAi" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg> View Repository on GitHub <span>&rarr;</span></a></div>
+    </div>
   </article>
 
-  <!-- ━━━ 5. BLOCK BLAST ━━━ -->
-  <article class="project fade-in">
+  <!-- ━━━ 7. BLOCK BLAST ━━━ -->
+  <article class="project fade-in" data-category="game-sim">
     <div class="project-head">
       <h2>Block Blast</h2>
       <span class="type t-purple">Game State Engineering · CI/CD</span>
@@ -793,10 +1067,41 @@
         </div>
       </div>
     </div>
+    <div class="project-actions"><a class="btn-repo" href="https://github.com/coskunburak/blockblast" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg> View Repository on GitHub <span>&rarr;</span></a></div>
+    </div>
   </article>
 
-  <!-- ━━━ 6. FITGEN AI ━━━ -->
-  <article class="project fade-in">
+    <!-- ━━━ 8. COLORBLOCKJAM ━━━ -->
+  <article class="project fade-in" data-category="game-sim">
+    <div class="project-head">
+      <h2>ColorBlockJam</h2>
+      <span class="type t-amber">Mobile Grid Puzzle Engine · React Native · TypeScript · MMKV</span>
+    </div>
+    <div class="project-body">
+      <p class="project-desc">
+        High-performance mobile grid puzzle game engineered with React Native and TypeScript.
+        Features a deterministic 2D grid collision engine with exits, gates, destructible obstacles,
+        frozen blocks, move limits, and powerup booster cascades. Utilizes MMKV low-latency storage
+        for state persistence, level progression, and virtual economy tracking.
+      </p>
+      <div class="tags">
+        <span class="tag">React Native</span><span class="tag">TypeScript</span><span class="tag">MMKV Storage</span>
+        <span class="tag">Grid Collision Engine</span><span class="tag">Deterministic Reducer</span><span class="tag">Mobile Game</span>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat"><span class="sv">100%</span><span class="sl">Deterministic Grid Physics</span></div>
+        <div class="stat"><span class="sv">&lt;2ms</span><span class="sl">MMKV Storage Latency</span></div>
+        <div class="stat"><span class="sv">50+</span><span class="sl">Handcrafted Campaign Levels</span></div>
+        <div class="stat"><span class="sv">60 FPS</span><span class="sl">Smooth Touch Interactions</span></div>
+      </div>
+    </div>
+    <div class="project-actions"><a class="btn-repo" href="https://github.com/coskunburak/colorblockjam" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg> View Repository on GitHub <span>&rarr;</span></a></div>
+    </div>
+  </article>
+
+<!-- ━━━ 9. FITGEN AI ━━━ -->
+  <article class="project fade-in" data-category="ai">
     <div class="project-head">
       <h2>FitGen AI</h2>
       <span class="type t-green">Flutter · Gemini AI · Firebase Full-Stack</span>
@@ -864,10 +1169,12 @@
         </div>
       </div>
     </div>
+    <div class="project-actions"><a class="btn-repo" href="https://github.com/coskunburak/fitgen-ai" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg> View Repository on GitHub <span>&rarr;</span></a></div>
+    </div>
   </article>
 
-  <!-- ━━━ 7. TABKNOCKOUT ━━━ -->
-  <article class="project fade-in">
+  <!-- ━━━ 10. TABKNOCKOUT ━━━ -->
+  <article class="project fade-in" data-category="game-sim">
     <div class="project-head">
       <h2>TabKnockout</h2>
       <span class="type t-red" style="background:rgba(248,113,113,0.1);color:var(--red);border:1px solid rgba(248,113,113,0.25);">Unity C# · 100+ Test Files · Roguelite</span>
@@ -941,10 +1248,12 @@
         </div>
       </div>
     </div>
+    <div class="project-actions"><a class="btn-repo" href="https://github.com/coskunburak/tabknockout" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg> View Repository on GitHub <span>&rarr;</span></a></div>
+    </div>
   </article>
 
-  <!-- ━━━ 8. MENTAL MATH TRAINER ━━━ -->
-  <article class="project fade-in">
+  <!-- ━━━ 11. MENTAL MATH TRAINER ━━━ -->
+  <article class="project fade-in" data-category="apple-mobile">
     <div class="project-head">
       <h2>Mental Math Trainer</h2>
       <span class="type t-amber">Expo / React Native · Neuro Fusion · Season Pass</span>
@@ -1017,10 +1326,12 @@
         </div>
       </div>
     </div>
+    <div class="project-actions"><a class="btn-repo" href="https://github.com/coskunburak/mental-math-trainer" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg> View Repository on GitHub <span>&rarr;</span></a></div>
+    </div>
   </article>
 
-  <!-- ━━━ 9. EKOMOBIL ━━━ -->
-  <article class="project fade-in">
+  <!-- ━━━ 12. EKOMOBIL ━━━ -->
+  <article class="project fade-in" data-category="enterprise">
     <div class="project-head">
       <h2>EkoMobil</h2>
       <span class="type t-cyan">Full-Stack · Flutter + Java Spring Boot</span>
@@ -1101,6 +1412,8 @@
         </div>
       </div>
     </div>
+    <div class="project-actions"><a class="btn-repo" href="https://github.com/coskunburak/ekomobil_mobil" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg> View Repository on GitHub <span>&rarr;</span></a></div>
+    </div>
   </article>
 </div>
 
@@ -1112,13 +1425,13 @@
     <tbody>
       <tr><td><strong>Apple Native</strong></td><td>Swift, SwiftUI, UIKit, SpriteKit, Core ML, Metal, Vision, Core Image, StoreKit 2, SwiftData, AVFoundation, PhotosUI</td></tr>
       <tr><td><strong>Cross-Platform</strong></td><td>React Native 0.82, Expo 54, TypeScript, Flutter, Dart, BLoC, GetIt, GoRouter, React 19</td></tr>
-      <tr><td><strong>Backend (JVM)</strong></td><td>Java 21, Spring Boot 3, Modular Monolith, Spring Data JPA, Hibernate, Flyway, ArchUnit, Micrometer, Testcontainers</td></tr>
-      <tr><td><strong>Backend (Node/Py)</strong></td><td>Node.js 20+, Fastify, Python 3.11, FastAPI, SymPy, PostgreSQL, Redis, Pydantic V2</td></tr>
-      <tr><td><strong>AI / ML</strong></td><td>PyTorch, Core ML (on-device), WHAM/SMPL, RTMPose/MMPose, Gemini/GPT (provider-neutral routing), coremltools</td></tr>
-      <tr><td><strong>Android Native</strong></td><td>Kotlin, Camera2, DevicePolicyManager, Accessibility Service, MQTT, PackageInstaller, NDK 27</td></tr>
-      <tr><td><strong>Infra & DevOps</strong></td><td>RunPod Serverless, AWS S3/MinIO, Docker, Firebase, Fastlane (7 lanes), GitHub Actions (9 workflows), Blender Headless</td></tr>
-      <tr><td><strong>Testing</strong></td><td>JUnit 5, Mockito, Testcontainers, XCTest, XCUITest, Pytest, Jest, ts-jest, ArchUnit, Visual Regression (BeautyQA), Golden Datasets, 100+ Unity EditMode Tests</td></tr>
-      <tr><td><strong>Game Development</strong></td><td>Unity / C#, SpriteKit, Boss/Ability/Wave/Combat Systems, Roguelite Architecture, VFX Pipelines, Deterministic State Reducers</td></tr>
+      <tr><td><strong>Backend (JVM)</strong></td><td>Java 21, Spring Boot 3.4.2 &amp; Spring Boot 4 (Modulith), Spring Data JPA, Hibernate (ddl-auto=validate), PostgreSQL 16/17, Flyway (V1–V25), Testcontainers, ArchUnit, Micrometer</td></tr>
+      <tr><td><strong>Backend (Node/Py)</strong></td><td>Node.js 20+, Fastify, Python 3.11, FastAPI, SymPy (CAS), PostgreSQL 16/17, Redis, Pydantic V2</td></tr>
+      <tr><td><strong>AI / ML</strong></td><td>PyTorch, Core ML (on-device Apple Neural Engine), WHAM/SMPL (3D Pose), RTMPose/MMPose, Gemini/GPT (provider-neutral routing), coremltools</td></tr>
+      <tr><td><strong>Android Native</strong></td><td>Kotlin, Custom Java Native Modules, Android Screen Pinning (startLockTask), DevicePolicyManager, Accessibility Service, NDK 27</td></tr>
+      <tr><td><strong>Infra & DevOps</strong></td><td>RunPod Serverless GPU, AWS S3 Presigned Direct Upload, Docker, Docker Compose, Firebase, Fastlane (7 lanes), GitHub Actions CI/CD</td></tr>
+      <tr><td><strong>Testing & Verification</strong></td><td>1,400+ Automated Tests: 950+ Unity C# EditMode/PlayMode tests, 218 Spring Boot JUnit 5/Testcontainers cases, 185 Swift XCTest/XCUITest suites, Pytest CAS tests, ArchUnit compile-time rules, Visual Regression (BeautyQA)</td></tr>
+      <tr><td><strong>Game & Engine Engineering</strong></td><td>Unity 6 LTS (6000.5.0f1), C# 12 / .NET Standard 2.1, HDRP 17.5, Domain-Driven Design (DDD), Hexagonal Architecture, Escrow Inventory Transactions, Quad-Clock Simulation, 4-Tier Sensory AI, Audio Attenuation Modeling, SpriteKit, Pure Reducers</td></tr>
       <tr><td><strong>Security & Privacy</strong></td><td>STRIDE Threat Modeling, COPPA/FERPA/GDPR, Keychain/Secure Enclave, RFC 7807, JWT/RBAC, Token Rotation, Anti-Abuse Systems</td></tr>
     </tbody>
   </table>
@@ -1137,11 +1450,11 @@
       </ul>
     </div>
     <div class="info-box">
-      <h4>📐 Deterministic State Machines</h4>
+      <h4>📐 Deterministic State Machines &amp; Escrow Guarantees</h4>
       <ul>
-        <li>Pure reducers: <code>(State, Action) → State</code> with zero side effects</li>
-        <li>Finite state machines with explicit guard conditions for all transitions</li>
-        <li>Server-provided seeds guarantee identical RNG across global device fleet</li>
+        <li>Pure reducers: <code>(State, Action) → State</code> with zero side effects across mobile and game engines</li>
+        <li>ACID-like two-phase escrow transactions eliminate inventory duplication and concurrency hazards</li>
+        <li>Quad-clock simulation separates presentation rates from biological and offline chunk persistence</li>
       </ul>
     </div>
     <div class="info-box">
@@ -1191,6 +1504,29 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }, 80);
 });
+
+  // Interactive Project Filter
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const projectCards = document.querySelectorAll('.project');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.getAttribute('data-filter');
+
+      projectCards.forEach(card => {
+        const cat = card.getAttribute('data-category');
+        if (filter === 'all' || cat === filter) {
+          card.classList.remove('is-hidden');
+          setTimeout(() => card.classList.add('visible'), 50);
+        } else {
+          card.classList.add('is-hidden');
+        }
+      });
+    });
+  });
+
 </script>
 </body>
 </html>

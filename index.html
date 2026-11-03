@@ -327,6 +327,53 @@
       height: 4px; background: rgba(255,255,255,0.06); border-radius: 4px; overflow: hidden;
     }
     .telemetry-fill { height: 100%; border-radius: 4px; }
+
+    /* === ARCHITECTURE BLUEPRINT & VISUAL FLOW CARDS === */
+    .blueprint-card {
+      background: radial-gradient(ellipse at top left, rgba(79,143,247,0.06), transparent 70%), rgba(14,14,18,0.7);
+      border: 1px solid rgba(79,143,247,0.22);
+      border-radius: 16px;
+      padding: 24px;
+      margin: 22px 0 28px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+    }
+    .blueprint-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--blue), var(--purple), transparent);
+    }
+    .blueprint-header {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--blue); margin-bottom: 20px; padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .blueprint-flow {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px; position: relative;
+    }
+    .flow-step {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: 12px; padding: 16px; transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+    .flow-step:hover {
+      background: rgba(255,255,255,0.06); border-color: var(--border2);
+      transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+    .step-badge {
+      display: inline-block; font-size: 0.68rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.08em; padding: 3px 8px; border-radius: 6px; margin-bottom: 10px;
+    }
+    .sb-blue   { background: rgba(79,143,247,0.15); color: var(--blue); border: 1px solid rgba(79,143,247,0.3); }
+    .sb-purple { background: rgba(167,139,250,0.15); color: var(--purple); border: 1px solid rgba(167,139,250,0.3); }
+    .sb-green  { background: rgba(52,211,153,0.15); color: var(--green); border: 1px solid rgba(52,211,153,0.3); }
+    .sb-amber  { background: rgba(251,191,36,0.15); color: var(--amber); border: 1px solid rgba(251,191,36,0.3); }
+    .sb-pink   { background: rgba(244,114,182,0.15); color: var(--pink); border: 1px solid rgba(244,114,182,0.3); }
+
+    .step-title { font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .step-desc { font-size: 0.8rem; color: var(--text2); line-height: 1.5; }
 </style>
 </head>
 <body>
@@ -426,6 +473,36 @@
         <div class="stat"><span class="sv">0</span><span class="sl">Duplication / Escrow Safe</span></div>
       </div>
 
+            <!-- VISUAL BLUEPRINT -->
+      <div class="blueprint-card">
+        <div class="blueprint-header">
+          <span>Architectural Topology — Hexagonal Ports &amp; Adapters</span>
+          <span style="color:var(--purple); font-weight:700;">950+ Passed Headless Tests</span>
+        </div>
+        <div class="blueprint-flow">
+          <div class="flow-step">
+            <span class="step-badge sb-purple">Presentation Layer</span>
+            <div class="step-title">Unity 6 &amp; HDRP 17.5</div>
+            <div class="step-desc">Hardware inputs, camera parallax raycasting, spatial audio, and graphics pipeline (1080p @ 60 FPS / 4K @ 30 FPS).</div>
+          </div>
+          <div class="flow-step">
+            <span class="step-badge sb-blue">Ports Boundary</span>
+            <div class="step-title">Strict Interfaces</div>
+            <div class="step-desc"><code>IInputPort</code>, <code>IRenderPort</code>, <code>IAudioPlaybackPort</code>, <code>IPhysicsRaycastPort</code> decouple engine from presentation.</div>
+          </div>
+          <div class="flow-step">
+            <span class="step-badge sb-green">Domain Core</span>
+            <div class="step-title">Pure C# DDD Engine</div>
+            <div class="step-desc">Zero UnityEngine dependency. Escrow 2PC transactional inventory, Quad-Clock simulation, and 4-tier sensory perception.</div>
+          </div>
+          <div class="flow-step">
+            <span class="step-badge sb-amber">Verification</span>
+            <div class="step-title">Headless CI Runner</div>
+            <div class="step-desc">950+ EditMode &amp; PlayMode tests execute headlessly in continuous integration, guaranteeing zero memory leaks.</div>
+          </div>
+        </div>
+      </div>
+
       <div class="arch">
         <span class="arch-label">Hexagonal Ports &amp; Adapters + Escrow Transaction Pipeline</span>
 <span class="ae">CLIENT RUNTIME (Unity 6 / HDRP)</span> <span class="ac">→ Player Inputs, Camera, Spatial Audio &amp; Rendering</span>
@@ -515,6 +592,36 @@
         <div class="stat"><span class="sv">SEC-015</span><span class="sl">Security Verified (PASS)</span></div>
         <div class="stat"><span class="sv">500ms</span><span class="sl">CAS CPU Timeout Budget</span></div>
         <div class="stat"><span class="sv">6</span><span class="sl">Bounded Modulith Contexts</span></div>
+      </div>
+
+            <!-- VISUAL BLUEPRINT -->
+      <div class="blueprint-card">
+        <div class="blueprint-header">
+          <span>Trust &amp; Verification Pipeline — Sprint 6.6</span>
+          <span style="color:var(--green); font-weight:700;">SEC-015 Verified (PASS)</span>
+        </div>
+        <div class="blueprint-flow">
+          <div class="flow-step">
+            <span class="step-badge sb-blue">Client Intake</span>
+            <div class="step-title">SwiftUI &amp; S3 Direct</div>
+            <div class="step-desc">iOS client captures math problem and uploads directly to AWS S3 via short-lived presigned URLs. Zero raw bytes on app servers.</div>
+          </div>
+          <div class="flow-step">
+            <span class="step-badge sb-amber">Untrusted AI</span>
+            <div class="step-title">LLM Multi-Router</div>
+            <div class="step-desc">Gemini / GPT-4o orchestrator generates candidate steps. Solution is strictly treated as untrusted, unverified student data.</div>
+          </div>
+          <div class="flow-step">
+            <span class="step-badge sb-purple">Deterministic CAS</span>
+            <div class="step-title">SymPy Python Engine</div>
+            <div class="step-desc">Isolated FastAPI service running custom AST parsing (no eval), 500ms CPU timeout budget, and formal symbolic proofs.</div>
+          </div>
+          <div class="flow-step">
+            <span class="step-badge sb-green">Monolith Core</span>
+            <div class="step-title">Spring Boot 4 Modulith</div>
+            <div class="step-desc">6 bounded contexts with ArchUnit-enforced boundaries. Only solutions verified by CAS receive the server-authoritative badge.</div>
+          </div>
+        </div>
       </div>
 
       <div class="arch">
@@ -644,6 +751,36 @@
         <div class="stat"><span class="sv">20+</span><span class="sl">S3 Artifact Types</span></div>
       </div>
 
+            <!-- VISUAL BLUEPRINT -->
+      <div class="blueprint-card">
+        <div class="blueprint-header">
+          <span>GPU Compute Topology — Graduation Thesis</span>
+          <span style="color:var(--amber); font-weight:700;">No-Fake-Success Gates</span>
+        </div>
+        <div class="blueprint-flow">
+          <div class="flow-step">
+            <span class="step-badge sb-blue">Mobile Capture</span>
+            <div class="step-title">React Native &amp; Expo</div>
+            <div class="step-desc">Records multi-angle physical movement and streams raw frames directly to S3 with cryptographic checksums.</div>
+          </div>
+          <div class="flow-step">
+            <span class="step-badge sb-purple">Orchestrator</span>
+            <div class="step-title">Node.js &amp; Fastify</div>
+            <div class="step-desc">Validates video metadata, tracks progress via WebSockets, and dispatches asynchronous jobs to GPU serverless workers.</div>
+          </div>
+          <div class="flow-step">
+            <span class="step-badge sb-amber">GPU Cluster</span>
+            <div class="step-title">RunPod Serverless</div>
+            <div class="step-desc">Executes WHAM (World-grounded Humans in Motion) and SMPL body models for 3D mesh and keypoint estimation.</div>
+          </div>
+          <div class="flow-step">
+            <span class="step-badge sb-green">Artifact Output</span>
+            <div class="step-title">DLT Triangulation &amp; BVH</div>
+            <div class="step-desc">Multi-camera direct linear transformation produces clean BVH animation files compatible with Blender and Unreal Engine.</div>
+          </div>
+        </div>
+      </div>
+
       <div class="arch">
         <span class="arch-label">16-Stage Processing Pipeline</span>
 <span class="ae">MOBILE (React Native + Native Camera Engines)</span>
@@ -754,6 +891,31 @@
         <div class="stat"><span class="sv">SDK 24–36</span><span class="sl">Android Range</span></div>
       </div>
 
+            <!-- VISUAL BLUEPRINT -->
+      <div class="blueprint-card">
+        <div class="blueprint-header">
+          <span>Enterprise Fleet Architecture — Physical Fleet Kiosk</span>
+          <span style="color:var(--green); font-weight:700;">Live in Corporate Production</span>
+        </div>
+        <div class="blueprint-flow">
+          <div class="flow-step">
+            <span class="step-badge sb-green">Hardware Lock</span>
+            <div class="step-title">Android LockTask API</div>
+            <div class="step-desc">Custom Java Native Module activates Screen Pinning, fully intercepting Home, Back, and Recent Apps hardware navigation.</div>
+          </div>
+          <div class="flow-step">
+            <span class="step-badge sb-blue">Host Bridge</span>
+            <div class="step-title">Bidirectional Bridge</div>
+            <div class="step-desc">React Native WebView bridge communicates real-time telemetry, thermal metrics, and peripheral printer/scanner events.</div>
+          </div>
+          <div class="flow-step">
+            <span class="step-badge sb-purple">Remote Config</span>
+            <div class="step-title">Zero-OTA Engine</div>
+            <div class="step-desc">Dynamic layout and behavior injection without requiring APK updates, ensuring zero fleet downtime.</div>
+          </div>
+        </div>
+      </div>
+
       <div class="arch">
         <span class="arch-label">14 Native Kotlin Modules Architecture</span>
 <span class="ae">REACT NATIVE (TypeScript)</span>
@@ -861,6 +1023,31 @@
         <div class="stat"><span class="sv">Zero</span><span class="sl">Raw Entity Exposure</span></div>
       </div>
 
+            <!-- VISUAL BLUEPRINT -->
+      <div class="blueprint-card">
+        <div class="blueprint-header">
+          <span>Enterprise Monolith Topology — Java 21 &amp; Spring Boot 3.4.2</span>
+          <span style="color:var(--green); font-weight:700;">Testcontainers Verified</span>
+        </div>
+        <div class="blueprint-flow">
+          <div class="flow-step">
+            <span class="step-badge sb-blue">API Layer</span>
+            <div class="step-title">REST &amp; RFC 7807</div>
+            <div class="step-desc">Jakarta validation, idempotent request handles, and RFC 7807 structured problem details for all failure modes.</div>
+          </div>
+          <div class="flow-step">
+            <span class="step-badge sb-green">Domain Model</span>
+            <div class="step-title">Pure OOP &amp; Value Objects</div>
+            <div class="step-desc">Immutable <code>TimeSlot</code>, <code>Money</code>, and mapped superclass hierarchies eliminating primitive obsession.</div>
+          </div>
+          <div class="flow-step">
+            <span class="step-badge sb-purple">Persistence</span>
+            <div class="step-title">Flyway &amp; PostgreSQL 17</div>
+            <div class="step-desc">Strict <code>ddl-auto=validate</code> ensures production schema matches Flyway migrations with zero mapping drift.</div>
+          </div>
+        </div>
+      </div>
+
       <div class="arch">
         <span class="arch-label">Layered Clean Architecture &amp; Enterprise Persistence Pipeline</span>
 <span class="ae">REST API / CLIENT LAYER</span> <span class="ac">→ Controllers with Jakarta Bean Validation &amp; RFC 7807 Error Responses</span>
@@ -927,6 +1114,31 @@
         <div class="stat"><span class="sv">60fps</span><span class="sl">Preview Render</span></div>
         <div class="stat"><span class="sv">0</span><span class="sl">Third-Party SDKs</span></div>
         <div class="stat"><span class="sv">5</span><span class="sl">Architecture Layers</span></div>
+      </div>
+
+            <!-- VISUAL BLUEPRINT -->
+      <div class="blueprint-card">
+        <div class="blueprint-header">
+          <span>On-Device Computer Vision Pipeline — Apple Neural Engine</span>
+          <span style="color:var(--pink); font-weight:700;">60 FPS Real-Time Metal</span>
+        </div>
+        <div class="blueprint-flow">
+          <div class="flow-step">
+            <span class="step-badge sb-pink">Edge Inference</span>
+            <div class="step-title">Core ML &amp; ANE</div>
+            <div class="step-desc">Custom PyTorch face parsing model running locally on Apple Neural Engine with sub-30ms inference and zero cloud latency.</div>
+          </div>
+          <div class="flow-step">
+            <span class="step-badge sb-blue">GPU Shaders</span>
+            <div class="step-title">Custom Metal Kernels</div>
+            <div class="step-desc">Edge-aware bilateral filtering and multi-class segmentation mask blending executing at a silky 60 FPS.</div>
+          </div>
+          <div class="flow-step">
+            <span class="step-badge sb-green">Quality Suite</span>
+            <div class="step-title">Snapshot Regression</div>
+            <div class="step-desc">Automated BeautyQA visual test suite detecting sub-pixel rendering regressions across iOS versions.</div>
+          </div>
+        </div>
       </div>
 
       <div class="arch">
